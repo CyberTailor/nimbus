@@ -1,0 +1,33 @@
+# SPDX-FileCopyrightText: 2015-2022 Nibmle Authors
+# SPDX-File-Contributor: Anna <cyber@sysrq.in>
+# SPDX-License-Identifier: CC0-1.0
+
+# ignore files wo extension (posix binaries)
+*
+!*.*
+!*/
+
+# Any path
+*.swp
+*~
+nimcache/
+
+# Windows executables
+*.exe
+*.dll
+
+# VCC compiler and linker artifacts
+*.ilk
+*.pdb
+
+# Editors and IDEs project files and folders
+.vscode
+
+# VCS artifacts
+*.orig
+
+# Test procedure artifacts
+outputExpected.txt
+outputGotten.txt
+testresults/
+tests/megatest.nim
