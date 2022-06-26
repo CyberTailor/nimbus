@@ -2,13 +2,14 @@
 # SPDX-FileCopyrightText: 2022 Anna <cyber@sysrq.in>
 # SPDX-License-Identifier: BSD-3-Clause
 
-import os, parseopt, strutils
+import logging, os, parseopt, strutils
 
 type
   Options* = object
     showHelp*: bool
     nim*: string # Nim compiler location
     sourceDir*: string
+    logger*: ConsoleLogger
 
 const
   help* = """
@@ -25,6 +26,10 @@ optional arguments:
 proc writeHelp*() =
   echo(help)
   quit(QuitSuccess)
+
+proc setLogger*(options: var Options) =
+  options.logger = newConsoleLogger()
+  addHandler(options.logger)
 
 proc getSourceDir*(options: Options): string =
   return options.sourceDir

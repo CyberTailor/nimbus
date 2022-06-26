@@ -10,6 +10,7 @@ when isMainModule:
   var opt = parseCmdLine()
   if opt.showHelp:
     writeHelp() # quits
+  opt.setLogger
   opt.setSourceDir
   opt.setNimBin
   opt.setup()
