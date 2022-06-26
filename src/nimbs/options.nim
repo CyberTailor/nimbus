@@ -4,23 +4,27 @@
 
 import logging, os, parseopt, strutils
 
+import common
+
 type
   Options* = object
     showHelp*: bool
+    nimbleDir*: string
     nim*: string # Nim compiler location
     sourceDir*: string
     logger*: ConsoleLogger
 
 const
   help* = """
-Usage: nimbus [-h] [--nim:path] sourceDir
+Usage: nimbus [-h] [--nimbleDir:path] [--nim:path] sourceDir
 
 positional arguments:
   sourceDir
 
 optional arguments:
-  -h, --help    show this help message and exit
-  --nim:path    Nim compiler (default: nim).
+  -h, --help          show this help message and exit
+  --nimbleDir:path    Nimble directory (default: /opt/nimble).
+  --nim:path          Nim compiler (default: nim).
 """
 
 proc writeHelp*() =
@@ -38,6 +42,18 @@ proc setSourceDir*(options: var Options) =
   options.sourceDir = expandTilde(options.sourceDir).absolutePath()
   if not dirExists(options.sourceDir):
     quit("Source directory $1 does not exist" % options.sourceDir)
+
+proc getNimbleDir*(options: Options): string =
+  return options.nimbleDir
+
+proc getPkgsDir*(options: Options): string =
+  options.getNimbleDir() / nimblePackagesDirName
+
+proc setNimbleDir*(options: var Options) =
+  if options.nimbleDir.len != 0:
+    options.nimbleDir = expandTilde(options.nimbleDir).absolutePath()
+  else:
+    options.nimbleDir = defaultNimbleDir
 
 proc setNimBin*(options: var Options) =
   # Find nim binary and set into options
@@ -86,6 +102,7 @@ proc parseFlag*(flag, val: string, result: var Options, kind = cmdLongOption) =
 
   case f
   of "help", "h": result.showHelp = true
+  of "nimbledir": result.nimbleDir = val
   of "nim": result.nim = val
   else: quit("Unknown option: " & getFlagString(kind, flag, val))
 

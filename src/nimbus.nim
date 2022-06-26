@@ -13,4 +13,5 @@ when isMainModule:
   opt.setLogger
   opt.setSourceDir
   opt.setNimBin
+  opt.setNimbleDir
   opt.setup()
