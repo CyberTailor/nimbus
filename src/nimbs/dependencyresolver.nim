@@ -4,7 +4,7 @@
 
 import logging, os, osproc, parseutils, sequtils, strformat, strutils
 
-import options, version
+import options, packagemetadata, version
 
 type
   ## Tuple representing an installed package.
@@ -61,10 +61,11 @@ proc getPath*(depPkg: PkgTuple, options: Options): string =
   echo "-- Checking for " & depPkg.name
   var matchingPkgs: seq[Package] = @[]
   for pkg in pkgList:
-    if pkg.name != depPkg.name:
-      continue
     if not withinRange(pkg.version, depPkg.ver):
       continue
+    if depPkg.name != pkg.name:
+      if depPkg.name != getUrl(pkg.path):
+        continue
     matchingPkgs.add(pkg)
 
   if matchingPkgs.len == 0:

@@ -4,3 +4,5 @@
 const
   defaultNimbleDir* = "/opt/nimble"
   nimblePackagesDirName* = "pkgs2"
+
+  packageMetadataFileName* = "nimblemeta.json"
