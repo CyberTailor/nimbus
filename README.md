@@ -54,6 +54,18 @@ Contributing
 Patches and pull requests are welcome. Please use either [git-send-email(1)][1]
 or [git-request-pull(1)][2], addressed to <cyber@sysrq.in>.
 
+Your commit message should conform to the following standard:
+
+```
+file/changed: Concice and complete statement of the purpose
+
+This is the body of the commit message.  The line above is the
+summary.  The summary should be no more than 72 chars long.  The
+body can be more freely formatted, but make it look nice.  Make
+sure to reference any bug reports and other contributors.  Make
+sure the correct authorship appears.
+```
+
 [1]: https://git-send-email.io/
 [2]: https://git-scm.com/docs/git-request-pull
 
