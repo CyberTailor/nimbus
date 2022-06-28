@@ -4,6 +4,14 @@
 
 import os
 
+import nimbleexecutor, options
+
+proc getPackageName*(nimbleFile: string, options: Options): string =
+  let packageName = nimbleFile.queryString("packageName", options)
+  if packageName.len != 0:
+    return packageName
+  return splitFile(nimbleFile).name
+
 proc findNimbleFile*(dir: string): string =
   var hits = 0
   for kind, path in walkDir(dir):
