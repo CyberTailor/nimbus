@@ -35,9 +35,17 @@ Installing
 
     `nimble install`
 
-* Using bootstrapped nimbus:
+* Using just Nim compiler:
 
-    *TODO*
+    nim c src/nimbus
+
+
+Testing
+-------
+
+```sh
+$ testament all
+```
 
 
 Contributing
