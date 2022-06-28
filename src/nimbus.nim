@@ -44,6 +44,15 @@ proc setup(options: Options) =
   ninja.newline()
 
   ninja.variable("nim", options.getNimBin())
+  ninja.variable("nimbus", getAppFilename())
+  ninja.variable("sourcedir", options.getSourceDir())
+  ninja.newline()
+
+  ninja.rule("REGENERATE_BUILD",
+    command = "$nimbus $sourcedir",
+    description = "Regenerating build files.",
+    pool = "console",
+    generator = true)
   ninja.newline()
 
   ninja.rule("nimscript",
@@ -54,6 +63,16 @@ proc setup(options: Options) =
 
   ninja.comment("Phony build target, always out of date")
   ninja.build(@["PHONY"], rule = "phony")
+  ninja.newline()
+
+  ninja.build(@["build.ninja"],
+    rule = "REGENERATE_BUILD",
+    inputs = @[pkgInfo.nimbleFile])
+  ninja.newline()
+
+  ninja.build(@["reconfigure"],
+    rule = "REGENERATE_BUILD",
+    implicit = @["PHONY"])
   ninja.newline()
 
   ninja.build(@["install"],
