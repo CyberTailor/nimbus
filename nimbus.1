@@ -1,0 +1,74 @@
+.\" SPDX-FileType: DOCUMENTATION
+.\" SPDX-FileCopyrightText: 2022 Anna <cyber@sysrq.in>
+.\" SPDX-License-Identifier: BSD-3-Clause
+.Dd June 29, 2022
+.Dt NIMBUS 1
+.Os
+.Sh NAME
+.Nm nimbus
+.Nd a Nim build system
+.Sh SYNOPSIS
+.Nm
+.Op Fl Fl binDir : Ns Ar path
+.Op Fl Fl nimbleDir : Ns Ar path
+.Op Fl Fl nim : Ns Ar path
+.Op nim opts...
+.Ar sourceDir
+.Sh DESCRIPTION
+The
+.Nm
+meta-build system generates files for the Ninja build system from Nimble projects.
+.Pp
+The arguments are as follows:
+.Bl -tag -width Ds
+.It Ar sourceDir
+A directory where the
+.Sy .nimble
+file is located.
+.
+.It Fl Fl binDir : Ns Ar path
+Set the executable directory.
+.
+.It Fl Fl nimbleDir : Ns Ar path
+Set the Nimble directory.
+.
+.It Fl Fl nim : Ns Ar path
+Set the Nim compiler.
+.El
+.Pp
+All unrecognized flags are passed to the Nim compiler.
+.Sh ENVIRONMENT
+.Bl -tag -width DESTDIR
+.It Ev DESTDIR
+A variable prepended to each installed target file.
+.El
+.Sh FILES
+.Bl -tag -width installer.nims
+.It Pa build.ninja
+.It Pa installer.nims
+.El
+.Sh EXIT STATUS
+.Ex -std
+.Sh EXAMPLES
+Build and install a project:
+.Bd -literal -offset indent
+mkdir build
+cd build
+nimbus ..
+ninja
+sudo ninja install
+.Ed
+.Sh SEE ALSO
+.Bl -bullet -width 1n
+.It
+.Lk https://nim-lang.org/docs/nimc.html "Nim compiler user guide"
+.It
+.Lk https://github.com/nim-lang/nimble "Nimble package manager"
+.It
+.Lk https://ninja-build.org/manual.html "Ninja manual"
+.El
+.Sh AUTHORS
+.An -split
+.An Anna
+.Aq Mt cyber@sysrq.in
+.An Nimble Authors
