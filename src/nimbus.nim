@@ -4,7 +4,8 @@
 import os, sequtils, strtabs, strutils
 
 import nimbs/common, nimbs/dependencyresolver, nimbs/installerscript,
-       nimbs/ninjasyntax, nimbs/options, nimbs/packageinfo, nimbs/version
+       nimbs/ninjasyntax, nimbs/nimbleexecutor, nimbs/options,
+       nimbs/packageinfo, nimbs/version
 
 proc processDependencies(requires: seq[string], options: Options): seq[string] =
   for req in requires:
@@ -29,6 +30,17 @@ proc application(ninja: File, input, output: string, paths: seq[string]) =
     variables = vars
   )
 
+proc task(ninja: File, nimsFile, taskName: string) =
+  var vars = newStringTable()
+  vars["taskname"] = taskName
+
+  ninja.build(@[taskName],
+    rule = "nimbletask",
+    inputs = @[nimsFile],
+    implicit = @["PHONY"],
+    variables = vars
+  )
+
 proc setup(options: Options) =
   echo "The nimbus build system"
   echo "Version: " & nimbusVersion
@@ -41,7 +53,15 @@ proc setup(options: Options) =
   echo "Nim compiler: " & options.getNimBin()
   echo ""
 
+  let nimbusPriv = options.getBuildDir() / "nimbus-private"
+  createDir(nimbusPriv)
+
   let depPaths = processDependencies(pkgInfo.requires, options)
+
+  let nimsFile =
+    nimbusPriv / splitFile(pkgInfo.nimbleFile).name.changeFileExt("nims")
+  copyFile(pkgInfo.nimbleFile, nimsFile)
+  let tasks = nimsFile.getTasks(options)
 
   echo "-- Generating installer script"
   let installer = open(options.getBuildDir() / installerFileName, fmWrite)
@@ -78,6 +98,14 @@ proc setup(options: Options) =
     pool = "console")
   ninja.newline()
 
+  if tasks.len != 0:
+    # most tasks are supposed to be run from the project root
+    ninja.rule("nimbletask",
+      command = "cd $sourcedir && $nim --hints:off $taskname $in",
+      description = "Executing task $taskname",
+      pool = "console")
+    ninja.newline()
+
   if pkgInfo.bin.len != 0:
     ninja.rule("nimc",
       command = "$nim --hints:off $nimflags c -o:$out $paths $in",
@@ -87,6 +115,10 @@ proc setup(options: Options) =
   ninja.comment("Phony build target, always out of date")
   ninja.build(@["PHONY"], rule = "phony")
   ninja.newline()
+
+  for taskName in tasks:
+    ninja.task(nimsFile, taskName)
+    ninja.newline()
 
   ninja.build(@["build.ninja"],
     rule = "REGENERATE_BUILD",
