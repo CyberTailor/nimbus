@@ -13,16 +13,18 @@ type
     binDir*: string
     nim*: string # Nim compiler location
     sourceDir*: string
+    buildDir*: string
     logger*: ConsoleLogger
     passNimFlags*: seq[string]
 
 const
   help* = """
 Usage: nimbus [-h] [--nimbleDir:path] [--binDir:path] [--nim:path] [nim opts...]
-              sourceDir
+              sourceDir [buildDir]
 
 positional arguments:
   sourceDir
+  buildDir
 
 optional arguments:
   -h, --help          show this help message and exit
@@ -40,6 +42,16 @@ proc writeHelp*() =
 proc setLogger*(options: var Options) =
   options.logger = newConsoleLogger()
   addHandler(options.logger)
+
+proc getBuildDir*(options: Options): string =
+  return options.buildDir
+
+proc setBuildDir*(options: var Options) =
+  if options.buildDir.len != 0:
+    options.buildDir = expandTilde(options.buildDir).absolutePath()
+    createDir(options.buildDir)
+  else:
+    options.buildDir = getCurrentDir()
 
 proc getSourceDir*(options: Options): string =
   return options.sourceDir
@@ -133,10 +145,13 @@ proc parseCmdLine*(): Options =
     case kind
     of cmdArgument:
       inc argc
-      result.sourceDir = key
+      case argc
+      of 1: result.sourceDir = key
+      of 2: result.buildDir = key
+      else: discard
     of cmdLongOption, cmdShortOption:
       parseFlag(key, val, result, kind)
     of cmdEnd: assert(false) # cannot happen
 
-  if argc != 1:
+  if argc notin {1..2}:
     result.showHelp = true

@@ -14,6 +14,7 @@
 .Op Fl Fl nim : Ns Ar path
 .Op nim opts...
 .Ar sourceDir
+.Op Ar buildDir
 .Sh DESCRIPTION
 The
 .Nm
@@ -25,6 +26,10 @@ The arguments are as follows:
 A directory where the
 .Sy .nimble
 file is located.
+.
+.It Ar buildDir
+Build directory,
+location where all generated files should be placed.
 .
 .It Fl Fl binDir : Ns Ar path
 Set the executable directory.
