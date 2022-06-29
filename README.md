@@ -37,7 +37,7 @@ Installing
 
 * Using just Nim compiler:
 
-    nim c src/nimbus
+    `nim c src/nimbus`
 
 
 Testing

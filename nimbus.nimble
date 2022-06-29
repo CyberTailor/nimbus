@@ -10,7 +10,13 @@ license       = "BSD"
 
 bin = @["nimbus"]
 srcDir = "src"
+installExt = @["nim"]
 
 # Dependencies
 
 requires "nim >= 0.13.0"
+
+# Tasks
+
+task test, "Test nimbus with Testament":
+  exec("testament all")
