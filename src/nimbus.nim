@@ -47,6 +47,9 @@ proc setup(options: Options) =
   echo "Source dir: " & options.getSourceDir()
   echo "Build dir: " & options.getBuildDir()
 
+  if options.getSourceDir() == options.getBuildDir():
+    quit("In-source builds are not allowed")
+
   let pkgInfo = initPackageInfo(options)
   echo "Project name: " & pkgInfo.name
   echo "Project version: " & pkgInfo.version
