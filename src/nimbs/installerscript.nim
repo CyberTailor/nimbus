@@ -23,7 +23,8 @@ let destDir = getEnv("DESTDIR")
 
   let packageDir = options.getPkgsDir() / (pkgInfo.name & '-' & pkgInfo.version)
   f.writeMkDir(packageDir)
-  f.writeCpFile(pkgInfo.nimbleFile, packageDir / pkgInfo.nimbleFile.lastPathPart)
+  f.writeCpFile(pkgInfo.nimbleFile,
+                packageDir / pkgInfo.nimbleFile.lastPathPart)
 
   let offset = pkgInfo.getSourceDir(options).len
   for entry in pkgInfo.getInstallFiles(options):

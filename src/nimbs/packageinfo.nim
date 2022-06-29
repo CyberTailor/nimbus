@@ -12,10 +12,13 @@ type
     name*: string
     version*: string
     requires*: seq[string]
+    skipDirs*: seq[string]
+    skipFiles*: seq[string]
+    skipExt*: seq[string]
     installDirs*: seq[string]
     installFiles*: seq[string]
     installExt*: seq[string]
-    srcDir: string
+    srcDir*: string
 
   InstallEntry* = tuple
     kind: PathComponent
@@ -48,6 +51,9 @@ proc initPackageInfo*(options: Options): PackageInfo =
     name: nimbleFile.getPackageName(options),
     version: nimbleFile.queryString("version", options),
     requires: nimbleFile.queryArray("requiresData", options),
+    skipDirs: nimbleFile.queryArray("skipDirs", options),
+    skipFiles: nimbleFile.queryArray("skipFiles", options),
+    skipExt: nimbleFile.queryArray("skipExt", options),
     installDirs: nimbleFile.queryArray("installDirs", options),
     installFiles: nimbleFile.queryArray("installFiles", options),
     installExt: nimbleFile.queryArray("installExt", options),
@@ -60,6 +66,35 @@ proc getSourceDir*(pkgInfo: PackageInfo, options: Options): string =
     return options.getSourceDir() / pkgInfo.srcDir
   else:
     return options.getSourceDir()
+
+proc checkInstallFile(pkgInfo: PackageInfo, sourceDir, file: string): bool =
+  ## Checks whether ``file`` should be installed.
+  ## ``True`` means file should be skipped.
+  if file == pkgInfo.nimbleFile:
+    # process it separately
+    return true
+
+  for ignoreFile in pkgInfo.skipFiles:
+    if file == sourceDir / ignoreFile:
+      return true
+
+  for ignoreExt in pkgInfo.skipExt:
+    if splitFile(file).ext == ('.' & ignoreExt):
+      return true
+
+  if splitFile(file).name[0] == '.': return true
+
+proc checkInstallDir(pkgInfo: PackageInfo, sourceDir, dir: string): bool =
+  ## Determines whether ``dir`` should be installed.
+  ## ``True`` means dir should be skipped.
+  for ignoreDir in pkgInfo.skipDirs:
+    if dir == sourceDir / ignoreDir:
+      return true
+
+  let thisDir = splitPath(dir).tail
+  assert thisDir != ""
+  if thisDir[0] == '.': return true
+  if thisDir == "nimcache": return true
 
 proc getFilesWithExt(dir: string, installExt: seq[string]): seq[InstallEntry] =
   for kind, path in walkDir(dir):
@@ -81,6 +116,23 @@ proc getFilesInDir(dir: string): seq[InstallEntry] =
         result &= contents
     else:
       result.add (pcFile, path)
+
+proc getFiles(pkgInfo: PackageInfo, dir: string): seq[InstallEntry] =
+    for kind, path in walkDir(dir):
+      case kind
+      of pcDir:
+        let skip = pkgInfo.checkInstallDir(dir, path)
+        if skip:
+          continue
+        result.add (kind, path)
+        result &= pkgInfo.getFiles(path)
+      of pcFile:
+        let skip = pkgInfo.checkInstallFile(dir, path)
+        if skip:
+          continue
+        result.add (kind, path)
+      else:
+        continue
 
 proc getInstallFiles*(pkgInfo: PackageInfo, options: Options): seq[InstallEntry] =
   let sourceDir = pkgInfo.getSourceDir(options)
@@ -105,5 +157,7 @@ proc getInstallFiles*(pkgInfo: PackageInfo, options: Options): seq[InstallEntry]
       result &= getFilesInDir(src)
 
     result &= getFilesWithExt(sourceDir, pkgInfo.installExt)
+  else:
+    result = pkgInfo.getFiles(sourceDir)
 
   return deduplicate(result)
