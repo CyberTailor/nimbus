@@ -14,10 +14,12 @@ type
     nim*: string # Nim compiler location
     sourceDir*: string
     logger*: ConsoleLogger
+    passNimFlags*: seq[string]
 
 const
   help* = """
-Usage: nimbus [-h] [--nimbleDir:path] [--binDir:path] [--nim:path] sourceDir
+Usage: nimbus [-h] [--nimbleDir:path] [--binDir:path] [--nim:path] [nim opts...]
+              sourceDir
 
 positional arguments:
   sourceDir
@@ -27,6 +29,8 @@ optional arguments:
   --nimbleDir:path    Nimble directory (default: /opt/nimble).
   --binDir:path       Executable directory (default: /usr/local/bin).
   --nim:path          Nim compiler (default: nim).
+
+Unrecognized flags are passed to the Nim compiler.
 """
 
 proc writeHelp*() =
@@ -96,6 +100,9 @@ proc setNimBin*(options: var Options) =
 proc getNimBin*(options: Options): string =
   return options.nim
 
+proc getNimFlags*(options: Options): string =
+  return options.passNimFlags.join(" ")
+
 proc getFlagString(kind: CmdLineKind, flag, val: string): string =
   let prefix =
     case kind
@@ -116,7 +123,7 @@ proc parseFlag*(flag, val: string, result: var Options, kind = cmdLongOption) =
   of "nimbledir": result.nimbleDir = val
   of "bindir": result.binDir = val
   of "nim": result.nim = val
-  else: quit("Unknown option: " & getFlagString(kind, flag, val))
+  else: result.passNimFlags.add(getFlagString(kind, flag, val))
 
 proc parseCmdLine*(): Options =
   result = Options()

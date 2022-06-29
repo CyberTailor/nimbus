@@ -57,6 +57,7 @@ proc setup(options: Options) =
   ninja.newline()
 
   ninja.variable("nim", options.getNimBin())
+  ninja.variable("nimflags", options.getNimFlags())
   ninja.variable("nimbus", getAppFilename())
   ninja.variable("sourcedir", options.getSourceDir())
   ninja.newline()
@@ -76,7 +77,7 @@ proc setup(options: Options) =
 
   if pkgInfo.bin.len != 0:
     ninja.rule("nimc",
-      command = "$nim --hints:off c -o:$out $paths $in",
+      command = "$nim --hints:off $nimflags c -o:$out $paths $in",
       description = "Compiling Nim application $out")
     ninja.newline()
 
