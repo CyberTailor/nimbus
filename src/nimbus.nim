@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2022 Anna <cyber@sysrq.in>
 # SPDX-License-Identifier: BSD-3-Clause
 
-import os, strtabs, strutils
+import os, sequtils, strtabs, strutils
 
 import nimbs/common, nimbs/dependencyresolver, nimbs/installerscript,
        nimbs/ninjasyntax, nimbs/options, nimbs/packageinfo, nimbs/version
@@ -28,7 +28,6 @@ proc application(ninja: File, input, output: string, paths: seq[string]) =
     implicit = @["PHONY"], # FIXME: add depfile support to the Nim compiler
     variables = vars
   )
-  ninja.default(@[output])
 
 proc setup(options: Options) =
   echo "The nimbus build system"
@@ -101,10 +100,17 @@ proc setup(options: Options) =
     ninja.application(input, output, depPaths)
     ninja.newline()
 
+  ninja.build(@["all"],
+    rule = "phony",
+    inputs = map(pkgInfo.bin,
+                 proc(bin: string): string = bin.addFileExt(ExeExt)))
+  ninja.default(@["all"])
+  ninja.newline()
+
   ninja.build(@["install"],
     rule = "nimscript",
     inputs = @[installerFileName],
-    implicit = @["PHONY"])
+    implicit = @["PHONY", "all"])
   ninja.close()
 
 when isMainModule:
