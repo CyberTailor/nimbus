@@ -11,13 +11,15 @@ withDir("tests/testerscript/tests"):
   for test in listFiles("."):
     if test.startsWith("./t") and test.endsWith(".nim"):
       echo "-- Running test ", test, "..."
-      exec("/usr/bin/nim --hints:off r " & test)
+      exec("/usr/bin/nim --hints:off -d:release --threads:on r " & test)
 '''
 """
 
 import os
 import nimbs/options, nimbs/testerscript
 
-let opts = Options(sourceDir: "tests" / "testerscript", nim: "/usr/bin/nim")
+let opts = Options(sourceDir: "tests" / "testerscript",
+                   nim: "/usr/bin/nim",
+                   passNimFlags: @["-d:release", "--threads:on"])
 
 stdout.writeTesterScript(opts)

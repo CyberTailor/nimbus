@@ -16,5 +16,5 @@ withDir("$#"):
   for test in listFiles("."):
     if test.startsWith("./t") and test.endsWith(".nim"):
       echo "-- Running test ", test, "..."
-      exec("$# --hints:off r " & test)
-""" % [testsDir, getNimBin(options).quoteShell])
+      exec("$# --hints:off $# r " & test)
+""" % [testsDir, getNimBin(options).quoteShell, options.passNimFlags.join(" ")])
