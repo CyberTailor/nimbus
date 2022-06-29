@@ -15,6 +15,11 @@ proc writeMkDir(f: File, dir: string) =
   f.write(&"""mkDir(destDir & "{dir}")""")
   f.write('\n')
 
+proc makeExecutable(f: File, dest: string) =
+  let permissions = "{fpUserExec, fpGroupExec, fpOthersExec}"
+  f.write(&"""inclFilePermissions(destDir & "{dest}", {permissions})""")
+  f.write('\n')
+
 proc writeInstallerScript*(f: File, pkgInfo: PackageInfo, options: Options) =
   f.write("""#!/usr/bin/env nim e
 let destDir = getEnv("DESTDIR")
@@ -45,7 +50,9 @@ let destDir = getEnv("DESTDIR")
     return
 
   f.write('\n')
+  f.write("import os\n\n")
   f.writeMkDir(options.getBinDir())
   for bin in pkgInfo.bin:
     let binWithExt = bin.addFileExt(ExeExt)
     f.writeCpFile(binWithExt, options.getBinDir() / binWithExt)
+    f.makeExecutable(options.getBinDir() / binWithExt)

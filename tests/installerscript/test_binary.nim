@@ -7,6 +7,7 @@ discard """
   output: '''
 
 
+
 #!/usr/bin/env nim e
 cpFile("main", destDir & "/usr/local/bin/main")
 cpFile("tests/installerscript/binary/binary.nimble", destDir & "/opt/nimble/pkgs2/binary-1.0/binary.nimble")
@@ -14,6 +15,8 @@ cpFile("tests/installerscript/binary/main.nim", destDir & "/opt/nimble/pkgs2/bin
 echo "-- Installing " & destDir & "/opt/nimble/pkgs2/binary-1.0/binary.nimble"
 echo "-- Installing " & destDir & "/opt/nimble/pkgs2/binary-1.0/main.nim"
 echo "-- Installing " & destDir & "/usr/local/bin/main"
+import os
+inclFilePermissions(destDir & "/usr/local/bin/main", {fpUserExec, fpGroupExec, fpOthersExec})
 let destDir = getEnv("DESTDIR")
 mkDir(destDir & "/opt/nimble/pkgs2/binary-1.0")
 mkDir(destDir & "/usr/local/bin")
