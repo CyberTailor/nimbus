@@ -3,11 +3,12 @@
 
 discard """
   joinable: false
-  output: '''WARN Skipped unsupported package: packageA
-WARN Skipped unsupported package: packageA-abc
-WARN Skipped unsupported package: packageA-#abc123
+  sortoutput: true
+  output: '''--   Found packageA, version 0.5.0
 -- Checking for packageA
---   Found packageA, version 0.5.0
+WARN Skipped unsupported package: packageA
+WARN Skipped unsupported package: packageA-#abc123
+WARN Skipped unsupported package: packageA-abc
 '''
 """
 
