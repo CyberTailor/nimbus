@@ -3,18 +3,20 @@
 
 discard """
   disabled: "win"
-  output: '''#!/usr/bin/env nim e
-let destDir = getEnv("DESTDIR")
+  sortoutput: true
+  output: '''
 
-mkDir(destDir & "/opt/nimble/pkgs2/binary-1.0")
-echo "-- Installing " & destDir & "/opt/nimble/pkgs2/binary-1.0/binary.nimble"
-cpFile("tests/installerscript/binary/binary.nimble", destDir & "/opt/nimble/pkgs2/binary-1.0/binary.nimble")
-echo "-- Installing " & destDir & "/opt/nimble/pkgs2/binary-1.0/main.nim"
-cpFile("tests/installerscript/binary/main.nim", destDir & "/opt/nimble/pkgs2/binary-1.0/main.nim")
 
-mkDir(destDir & "/usr/local/bin")
-echo "-- Installing " & destDir & "/usr/local/bin/main"
+#!/usr/bin/env nim e
 cpFile("main", destDir & "/usr/local/bin/main")
+cpFile("tests/installerscript/binary/binary.nimble", destDir & "/opt/nimble/pkgs2/binary-1.0/binary.nimble")
+cpFile("tests/installerscript/binary/main.nim", destDir & "/opt/nimble/pkgs2/binary-1.0/main.nim")
+echo "-- Installing " & destDir & "/opt/nimble/pkgs2/binary-1.0/binary.nimble"
+echo "-- Installing " & destDir & "/opt/nimble/pkgs2/binary-1.0/main.nim"
+echo "-- Installing " & destDir & "/usr/local/bin/main"
+let destDir = getEnv("DESTDIR")
+mkDir(destDir & "/opt/nimble/pkgs2/binary-1.0")
+mkDir(destDir & "/usr/local/bin")
 '''
 """
 

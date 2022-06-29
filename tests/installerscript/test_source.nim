@@ -3,18 +3,20 @@
 
 discard """
   disabled: "win"
-  output: '''#!/usr/bin/env nim e
-let destDir = getEnv("DESTDIR")
+  sortoutput: true
+  output: '''
 
-mkDir(destDir & "/opt/nimble/pkgs2/source-1.0")
-echo "-- Installing " & destDir & "/opt/nimble/pkgs2/source-1.0/source.nimble"
+
+#!/usr/bin/env nim e
 cpFile("tests/installerscript/source/source.nimble", destDir & "/opt/nimble/pkgs2/source-1.0/source.nimble")
-
-mkDir(destDir & "/opt/nimble/pkgs2/source-1.0/source")
-echo "-- Installing " & destDir & "/opt/nimble/pkgs2/source-1.0/source/file1.nim"
 cpFile("tests/installerscript/source/source/file1.nim", destDir & "/opt/nimble/pkgs2/source-1.0/source/file1.nim")
-echo "-- Installing " & destDir & "/opt/nimble/pkgs2/source-1.0/source/file2.nim"
 cpFile("tests/installerscript/source/source/file2.nim", destDir & "/opt/nimble/pkgs2/source-1.0/source/file2.nim")
+echo "-- Installing " & destDir & "/opt/nimble/pkgs2/source-1.0/source.nimble"
+echo "-- Installing " & destDir & "/opt/nimble/pkgs2/source-1.0/source/file1.nim"
+echo "-- Installing " & destDir & "/opt/nimble/pkgs2/source-1.0/source/file2.nim"
+let destDir = getEnv("DESTDIR")
+mkDir(destDir & "/opt/nimble/pkgs2/source-1.0")
+mkDir(destDir & "/opt/nimble/pkgs2/source-1.0/source")
 '''
 """
 
