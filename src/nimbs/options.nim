@@ -12,6 +12,7 @@ type
     nimbleDir*: string
     binDir*: string
     nim*: string # Nim compiler location
+    url*: string 
     sourceDir*: string
     buildDir*: string
     logger*: ConsoleLogger
@@ -19,8 +20,8 @@ type
 
 const
   help* = """
-Usage: nimbus [-h] [--nimbleDir:path] [--binDir:path] [--nim:path] [nim opts...]
-              sourceDir [buildDir]
+Usage: nimbus [-h] [--nimbleDir:path] [--binDir:path] [--nim:path] [--url:url]
+              [nim opts...] sourceDir [buildDir]
 
 positional arguments:
   sourceDir
@@ -31,6 +32,7 @@ optional arguments:
   --nimbleDir:path    Nimble directory (default: /opt/nimble).
   --binDir:path       Executable directory (default: /usr/local/bin).
   --nim:path          Nim compiler (default: nim).
+  --url:url           Package URL.
 
 Unrecognized flags are passed to the Nim compiler.
 """
@@ -135,6 +137,7 @@ proc parseFlag*(flag, val: string, result: var Options, kind = cmdLongOption) =
   of "nimbledir": result.nimbleDir = val
   of "bindir": result.binDir = val
   of "nim": result.nim = val
+  of "url": result.url = val
   else: result.passNimFlags.add(getFlagString(kind, flag, val))
 
 proc parseCmdLine*(): Options =

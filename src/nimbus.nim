@@ -5,7 +5,7 @@ import os, sequtils, strtabs, strutils
 
 import nimbs/common, nimbs/dependencyresolver, nimbs/installerscript,
        nimbs/ninjasyntax, nimbs/nimbleexecutor, nimbs/options,
-       nimbs/packageinfo, nimbs/version
+       nimbs/packageinfo, nimbs/packagemetadata, nimbs/version
 
 proc processDependencies(requires: seq[string], options: Options): seq[string] =
   for req in requires:
@@ -63,6 +63,13 @@ proc setup(options: Options) =
   copyFile(pkgInfo.nimbleFile, nimsFile)
   let tasks = nimsFile.getTasks(options)
 
+  if options.url.len != 0:
+    echo "-- Generating nimblemeta.json"
+    let nimblemeta = open(options.getBuildDir() / packageMetadataFileName,
+                          fmWrite)
+    nimblemeta.writeMetaData(options.url)
+    nimblemeta.close()
+
   echo "-- Generating installer script"
   let installer = open(options.getBuildDir() / installerFileName, fmWrite)
   installer.writeInstallerScript(pkgInfo, options)
@@ -82,11 +89,12 @@ proc setup(options: Options) =
   ninja.variable("builddir", options.getBuildDir())
   ninja.variable("bindir", options.getBinDir())
   ninja.variable("nimbledir", options.getNimbleDir())
+  ninja.variable("url", options.url)
   ninja.newline()
 
   ninja.rule("REGENERATE_BUILD",
     command = "$nimbus --binDir:$bindir --nimbleDir:$nimbledir --nim:$nim " &
-              "$nimflags $sourcedir $builddir",
+              "--url:$url $nimflags $sourcedir $builddir",
     description = "Regenerating build files.",
     pool = "console",
     generator = true)

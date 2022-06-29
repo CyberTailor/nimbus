@@ -10,6 +10,7 @@
 # Any path
 *.swp
 *~
+build/
 nimcache/
 
 # Windows executables

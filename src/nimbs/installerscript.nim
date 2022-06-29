@@ -3,7 +3,7 @@
 
 import os, strformat
 
-import options, packageinfo
+import common, options, packageinfo
 
 proc writeCpFile(f: File, source, dest: string) =
   f.write(&"""echo "-- Installing " & destDir & "{dest}"""")
@@ -25,6 +25,10 @@ let destDir = getEnv("DESTDIR")
   f.writeMkDir(packageDir)
   f.writeCpFile(pkgInfo.nimbleFile,
                 packageDir / pkgInfo.nimbleFile.lastPathPart)
+
+  let nimbleMeta = options.getBuildDir() / packageMetadataFileName
+  if fileExists(nimbleMeta):
+    f.writeCpFile(nimbleMeta, packageDir / packageMetadataFileName)
 
   let offset = pkgInfo.getSourceDir(options).len
   for entry in pkgInfo.getInstallFiles(options):

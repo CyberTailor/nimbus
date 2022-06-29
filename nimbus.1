@@ -12,6 +12,7 @@
 .Op Fl Fl binDir : Ns Ar path
 .Op Fl Fl nimbleDir : Ns Ar path
 .Op Fl Fl nim : Ns Ar path
+.Op Fl Fl url : Ns Ar url
 .Op nim opts...
 .Ar sourceDir
 .Op Ar buildDir
@@ -39,6 +40,16 @@ Set the Nimble directory.
 .
 .It Fl Fl nim : Ns Ar path
 Set the Nim compiler.
+.
+.It Fl Fl url : Ns Ar url
+If this options is set,
+.Nm
+will generate and install a
+.Pa nimblemeta.json
+file.
+Some packages specify their dependencies using URLs and
+.Nm
+is unable to find them unless a metadata file exists.
 .El
 .Pp
 All unrecognized flags are passed to the Nim compiler.
@@ -48,9 +59,10 @@ All unrecognized flags are passed to the Nim compiler.
 A variable prepended to each installed target file.
 .El
 .Sh FILES
-.Bl -tag -width installer.nims
+.Bl -tag -width nimblemeta.json
 .It Pa build.ninja
 .It Pa installer.nims
+.It Pa nimblemeta.json
 .El
 .Sh EXIT STATUS
 .Ex -std
