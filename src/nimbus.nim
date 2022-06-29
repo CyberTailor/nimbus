@@ -5,7 +5,8 @@ import os, sequtils, strtabs, strutils
 
 import nimbs/common, nimbs/dependencyresolver, nimbs/installerscript,
        nimbs/ninjasyntax, nimbs/nimbleexecutor, nimbs/options,
-       nimbs/packageinfo, nimbs/packagemetadata, nimbs/version
+       nimbs/packageinfo, nimbs/packagemetadata, nimbs/testerscript,
+       nimbs/version
 
 proc processDependencies(requires: seq[string], options: Options): seq[string] =
   for req in requires:
@@ -42,6 +43,9 @@ proc task(ninja: File, nimsFile, taskName: string) =
   )
 
 proc setup(options: Options) =
+  # if true, nimble-style tests are used
+  var nimbleTests = false
+
   echo "The nimbus build system"
   echo "Version: " & nimbusVersion
   echo "Source dir: " & options.getSourceDir()
@@ -77,6 +81,13 @@ proc setup(options: Options) =
   let installer = open(options.getBuildDir() / installerFileName, fmWrite)
   installer.writeInstallerScript(pkgInfo, options)
   installer.close()
+
+  if "test" notin tasks and dirExists(options.getSourceDir() / "tests"):
+    echo "-- Generating tester script"
+    let tester = open(options.getBuildDir() / testerFileName, fmWrite)
+    tester.writeTesterScript(options)
+    tester.close()
+    nimbleTests = true
 
   echo "-- Generating build.ninja"
   let ninja = open(options.getBuildDir() / "build.ninja", fmWrite)
@@ -153,6 +164,13 @@ proc setup(options: Options) =
                  proc(bin: string): string = bin.addFileExt(ExeExt)))
   ninja.default(@["all"])
   ninja.newline()
+
+  if nimbleTests:
+    ninja.build(@["test"],
+      rule = "nimscript",
+      inputs = @[testerFileName],
+      implicit = @["PHONY", "all"])
+    ninja.newline()
 
   ninja.build(@["install"],
     rule = "nimscript",
