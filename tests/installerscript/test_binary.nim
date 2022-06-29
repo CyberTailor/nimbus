@@ -16,9 +16,10 @@ echo "-- Installing " & destDir & "/opt/nimble/pkgs2/binary-1.0/binary.nimble"
 echo "-- Installing " & destDir & "/opt/nimble/pkgs2/binary-1.0/main.nim"
 echo "-- Installing " & destDir & "/usr/local/bin/main"
 if chmod.len != 0:
-let chmod = findExe("chmod")mkDir(destDir & "/usr/local/bin")
+let chmod = findExe("chmod")
 let destDir = getEnv("DESTDIR")
 mkDir(destDir & "/opt/nimble/pkgs2/binary-1.0")
+mkDir(destDir & "/usr/local/bin")
 '''
 """
 
