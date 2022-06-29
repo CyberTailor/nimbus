@@ -70,6 +70,16 @@ sure the correct authorship appears.
 [2]: https://git-scm.com/docs/git-request-pull
 
 
+IRC
+---
+
+You can join the `#nimbus` channel either on [OFTC][oftc] or
+[via Matrix][matrix].
+
+[oftc]: https://www.oftc.net/
+[matrix]: https://matrix.to/#/#nimbus:matrix.org
+
+
 License
 -------
 
