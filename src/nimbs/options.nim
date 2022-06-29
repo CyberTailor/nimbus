@@ -10,13 +10,14 @@ type
   Options* = object
     showHelp*: bool
     nimbleDir*: string
+    binDir*: string
     nim*: string # Nim compiler location
     sourceDir*: string
     logger*: ConsoleLogger
 
 const
   help* = """
-Usage: nimbus [-h] [--nimbleDir:path] [--nim:path] sourceDir
+Usage: nimbus [-h] [--nimbleDir:path] [--binDir:path] [--nim:path] sourceDir
 
 positional arguments:
   sourceDir
@@ -24,6 +25,7 @@ positional arguments:
 optional arguments:
   -h, --help          show this help message and exit
   --nimbleDir:path    Nimble directory (default: /opt/nimble).
+  --binDir:path       Executable directory (default: /usr/local/bin).
   --nim:path          Nim compiler (default: nim).
 """
 
@@ -54,6 +56,15 @@ proc setNimbleDir*(options: var Options) =
     options.nimbleDir = expandTilde(options.nimbleDir).absolutePath()
   else:
     options.nimbleDir = defaultNimbleDir
+
+proc getBinDir*(options: Options): string =
+  return options.binDir
+
+proc setBinDir*(options: var Options) =
+  if options.binDir.len != 0:
+    options.binDir = expandTilde(options.binDir).absolutePath()
+  else:
+    options.binDir = defaultBinDir
 
 proc setNimBin*(options: var Options) =
   # Find nim binary and set into options
@@ -103,6 +114,7 @@ proc parseFlag*(flag, val: string, result: var Options, kind = cmdLongOption) =
   case f
   of "help", "h": result.showHelp = true
   of "nimbledir": result.nimbleDir = val
+  of "bindir": result.binDir = val
   of "nim": result.nim = val
   else: quit("Unknown option: " & getFlagString(kind, flag, val))
 

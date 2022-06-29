@@ -12,6 +12,7 @@ type
     name*: string
     version*: string
     requires*: seq[string]
+    bin*: seq[string]
     skipDirs*: seq[string]
     skipFiles*: seq[string]
     skipExt*: seq[string]
@@ -51,6 +52,7 @@ proc initPackageInfo*(options: Options): PackageInfo =
     name: nimbleFile.getPackageName(options),
     version: nimbleFile.queryString("version", options),
     requires: nimbleFile.queryArray("requiresData", options),
+    bin: nimbleFile.queryArray("bin", options),
     skipDirs: nimbleFile.queryArray("skipDirs", options),
     skipFiles: nimbleFile.queryArray("skipFiles", options),
     skipExt: nimbleFile.queryArray("skipExt", options),

@@ -4,6 +4,7 @@
 const
   nimbusVersion* = "0.1.0"
 
+  defaultBinDir* = "/usr/local/bin"
   defaultNimbleDir* = "/opt/nimble"
   nimblePackagesDirName* = "pkgs2"
 

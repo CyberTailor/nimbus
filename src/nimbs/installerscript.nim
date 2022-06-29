@@ -36,3 +36,12 @@ let destDir = getEnv("DESTDIR")
     of pcFile:
       f.writeCpFile(entry.path, dest)
     else: continue
+
+  if pkgInfo.bin.len == 0:
+    return
+
+  f.write('\n')
+  f.writeMkDir(options.getBinDir())
+  for bin in pkgInfo.bin:
+    let binWithExt = bin.addFileExt(ExeExt)
+    f.writeCpFile(binWithExt, options.getBinDir() / binWithExt)

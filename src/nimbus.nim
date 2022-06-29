@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2022 Anna <cyber@sysrq.in>
 # SPDX-License-Identifier: BSD-3-Clause
 
-import os
+import os, strtabs, strutils
 
 import nimbs/common, nimbs/dependencyresolver, nimbs/installerscript,
        nimbs/ninjasyntax, nimbs/options, nimbs/packageinfo, nimbs/version
@@ -16,6 +16,19 @@ proc processDependencies(requires: seq[string], options: Options): seq[string] =
         raise unsatisfiedDependencyError("Unsatisfied Nim dependency")
     else:
       result.add(dep.getPath(options))
+
+proc application(ninja: File, input, output: string, paths: seq[string]) =
+  var vars = newStringTable()
+  if paths.len != 0:
+    vars["paths"] = "-p:" & paths.join(" -p:")
+
+  ninja.build(@[output],
+    rule = "nimc",
+    inputs = @[input],
+    implicit = @["PHONY"], # FIXME: add depfile support to the Nim compiler
+    variables = vars
+  )
+  ninja.default(@[output])
 
 proc setup(options: Options) =
   echo "The nimbus build system"
@@ -61,6 +74,12 @@ proc setup(options: Options) =
     pool = "console")
   ninja.newline()
 
+  if pkgInfo.bin.len != 0:
+    ninja.rule("nimc",
+      command = "$nim --hints:off c -o:$out $paths $in",
+      description = "Compiling Nim application $out")
+    ninja.newline()
+
   ninja.comment("Phony build target, always out of date")
   ninja.build(@["PHONY"], rule = "phony")
   ninja.newline()
@@ -74,6 +93,12 @@ proc setup(options: Options) =
     rule = "REGENERATE_BUILD",
     implicit = @["PHONY"])
   ninja.newline()
+
+  for bin in pkgInfo.bin:
+    let output = bin.addFileExt(ExeExt)
+    let input = pkgInfo.getSourceDir(options) / bin.addFileExt("nim")
+    ninja.application(input, output, depPaths)
+    ninja.newline()
 
   ninja.build(@["install"],
     rule = "nimscript",
@@ -89,4 +114,5 @@ when isMainModule:
   opt.setSourceDir
   opt.setNimBin
   opt.setNimbleDir
+  opt.setBinDir
   opt.setup()

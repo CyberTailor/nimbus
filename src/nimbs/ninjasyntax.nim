@@ -104,7 +104,8 @@ proc subninja*(f: File, path: string) =
     f.line(&"subninja {path}")
 
 proc default*(f: File, paths: seq[string]) =
-  if paths.filterIt(it.len != 0).len != 0:
+  var paths = paths.filterIt(it.len != 0)
+  if paths.len != 0:
     f.line("default " & paths.join(" "))
 
 
