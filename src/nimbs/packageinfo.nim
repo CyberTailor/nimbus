@@ -2,7 +2,7 @@
 # SPDX-FileCopyrightText: 2022 Anna <cyber@sysrq.in>
 # SPDX-License-Identifier: BSD-3-Clause
 
-import logging, os, sequtils
+import logging, os, sequtils, threadpool
 
 import nimbleexecutor, options
 
@@ -47,20 +47,33 @@ proc findNimbleFile*(dir: string): string =
 
 proc initPackageInfo*(options: Options): PackageInfo =
   let nimbleFile = options.getSourceDir().findNimbleFile()
-  result = PackageInfo(
-    nimbleFile: nimbleFile,
-    name: nimbleFile.getPackageName(options),
-    version: nimbleFile.queryString("version", options),
-    requires: nimbleFile.queryArray("requiresData", options),
-    bin: nimbleFile.queryArray("bin", options),
-    skipDirs: nimbleFile.queryArray("skipDirs", options),
-    skipFiles: nimbleFile.queryArray("skipFiles", options),
-    skipExt: nimbleFile.queryArray("skipExt", options),
-    installDirs: nimbleFile.queryArray("installDirs", options),
-    installFiles: nimbleFile.queryArray("installFiles", options),
-    installExt: nimbleFile.queryArray("installExt", options),
-    srcDir: nimbleFile.queryString("srcDir", options)
-  )
+
+  let name = spawn nimbleFile.getPackageName(options)
+  let version = spawn nimbleFile.queryString("version", options)
+  let requires = spawn nimbleFile.queryArray("requiresData", options)
+  let bin = spawn nimbleFile.queryArray("bin", options)
+  let skipDirs = spawn nimbleFile.queryArray("skipDirs", options)
+  let skipFiles = spawn nimbleFile.queryArray("skipFiles", options)
+  let skipExt = spawn nimbleFile.queryArray("skipExt", options)
+  let installDirs = spawn nimbleFile.queryArray("installDirs", options)
+  let installFiles = spawn nimbleFile.queryArray("installFiles", options)
+  let installExt = spawn nimbleFile.queryArray("installExt", options)
+  let srcDir = spawn nimbleFile.queryString("srcDir", options)
+
+  sync()
+
+  result.nimbleFile = nimbleFile
+  result.name = ^name
+  result.version = ^version
+  result.requires = ^requires
+  result.bin = ^bin
+  result.skipDirs = ^skipDirs
+  result.skipFiles = ^skipFiles
+  result.skipExt = ^skipExt
+  result.installDirs = ^installDirs
+  result.installFiles = ^installFiles
+  result.installExt = ^installExt
+  result.srcDir = ^srcDir
 
 proc getSourceDir*(pkgInfo: PackageInfo, options: Options): string =
   ## Returns the directory containing the package source files.
