@@ -24,9 +24,10 @@ meta-build system generates files for the Ninja build system from Nimble project
 The arguments are as follows:
 .Bl -tag -width Ds
 .It Ar sourceDir
-A directory where the
+Source directory,
+location where package's
 .Sy .nimble
-file is located.
+file is placed.
 .
 .It Ar buildDir
 Build directory,
@@ -38,13 +39,13 @@ Note that the build directory must be different from the source directory.
 does not support building inside the source directory and attempting to do that leads to an error.
 .
 .It Fl Fl binDir : Ns Ar path
-Set the executable directory.
+Set the executable directory, where project's binaries will be installed.
 .
 .It Fl Fl nimbleDir : Ns Ar path
-Set the Nimble directory.
+Set the Nimble directory, where project's sources will be installed.
 .
 .It Fl Fl nim : Ns Ar path
-Set the Nim compiler.
+Set the Nim executable.
 .
 .It Fl Fl url : Ns Ar url
 If this options is set,
@@ -54,7 +55,7 @@ will generate and install a
 file.
 Some packages specify their dependencies using URLs and
 .Nm
-is unable to find them unless a metadata file exists.
+is unable to find them unless such metadata file exists.
 .El
 .Pp
 All unrecognized flags are passed to the Nim compiler.
