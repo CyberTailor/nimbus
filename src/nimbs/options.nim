@@ -30,13 +30,13 @@ positional arguments:
 
 optional arguments:
   -h, --help          show this help message and exit
-  --nimbleDir:path    Nimble directory (default: /opt/nimble).
-  --binDir:path       Executable directory (default: /usr/local/bin).
+  --nimbleDir:path    Nimble directory (default: $1).
+  --binDir:path       Executable directory (default: $2).
   --nim:path          Nim compiler (default: nim).
   --url:url           Package URL.
 
 Unrecognized flags are passed to the Nim compiler.
-"""
+""" % [defaultNimbleDir, defaultBinDir]
 
 proc writeHelp*() =
   echo(help)
