@@ -1,7 +1,7 @@
 .\" SPDX-FileType: DOCUMENTATION
 .\" SPDX-FileCopyrightText: 2022 Anna <cyber@sysrq.in>
 .\" SPDX-License-Identifier: BSD-3-Clause
-.Dd June 29, 2022
+.Dd July 2, 2022
 .Dt NIMBUS 1
 .Os
 .Sh NAME
@@ -64,17 +64,24 @@ All unrecognized flags are passed to the Nim compiler.
 A variable prepended to each installed target file.
 .El
 .Sh FILES
+The
+.Nm
+meta-build system generates the following files:
 .Bl -tag -width nimblemeta.json
 .It Pa build.ninja
+Build file for a ninja-compatible build system.
 .It Pa installer.nims
+Script for installing packages.
 .It Pa nimblemeta.json
+Metadata file that contains package URL.
 .It Pa tester.nims
+Script for running Nimble-style tests.
 .El
 .Sh EXIT STATUS
 .Ex -std
 .Sh EXAMPLES
 Build and install a project:
-.Bd -literal -offset indent
+.Bd -literal
 mkdir build
 cd build
 nimbus ..
