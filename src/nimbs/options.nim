@@ -17,6 +17,7 @@ type
     buildDir*: string
     logger*: ConsoleLogger
     passNimFlags*: seq[string]
+    cmdLine*: seq[string] # only flags, not arguments
 
 const
   help* = """
@@ -64,21 +65,26 @@ proc setSourceDir*(options: var Options) =
     quit("Source directory $1 does not exist" % options.sourceDir)
 
 proc getNimbleDir*(options: Options): string =
+  ## Get the Nimble directory.
   return options.nimbleDir
 
 proc getPkgsDir*(options: Options): string =
+  ## Get the packages directory inside the Nimble directory.
   options.getNimbleDir() / nimblePackagesDirName
 
 proc setNimbleDir*(options: var Options) =
+  ## Set the Nimble directory.
   if options.nimbleDir.len != 0:
     options.nimbleDir = expandTilde(options.nimbleDir).absolutePath()
   else:
     options.nimbleDir = defaultNimbleDir
 
 proc getBinDir*(options: Options): string =
+  ## Get the executable directory.
   return options.binDir
 
 proc setBinDir*(options: var Options) =
+  ## Set the executable directory.
   if options.binDir.len != 0:
     options.binDir = expandTilde(options.binDir).absolutePath()
   else:
@@ -118,19 +124,21 @@ proc getNimFlags*(options: Options): string =
   return options.passNimFlags.join(" ")
 
 proc getFlagString(kind: CmdLineKind, flag, val: string): string =
+  ## Make a flag string from components. The result is quoted.
   let prefix =
     case kind
     of cmdShortOption: "-"
     of cmdLongOption: "--"
     else: ""
   if val == "":
-    return prefix & flag
+    result = prefix & flag
   else:
-    return prefix & flag & ":" & val
+    result = prefix & flag & ":" & val
+  return result.quoteShell
 
-proc parseFlag*(flag, val: string, result: var Options, kind = cmdLongOption) =
-
+proc parseFlag(flag, val: string, result: var Options, kind = cmdLongOption) =
   let f = flag.normalize()
+  let flagString = getFlagString(kind, flag, val)
 
   case f
   of "help", "h": result.showHelp = true
@@ -138,23 +146,32 @@ proc parseFlag*(flag, val: string, result: var Options, kind = cmdLongOption) =
   of "bindir": result.binDir = val
   of "nim": result.nim = val
   of "url": result.url = val
-  else: result.passNimFlags.add(getFlagString(kind, flag, val))
+  else: result.passNimFlags.add(flagString)
+
+  result.cmdline.add(flagString)
+
+proc parseArgument(key: string, argc: var int, result: var Options) =
+  inc argc
+  case argc
+  of 1: result.sourceDir = key
+  of 2: result.buildDir = key
+  else: discard
 
 proc parseCmdLine*(): Options =
-  result = Options()
-
   var argc = 0
   for kind, key, val in getOpt():
     case kind
     of cmdArgument:
-      inc argc
-      case argc
-      of 1: result.sourceDir = key
-      of 2: result.buildDir = key
-      else: discard
+      parseArgument(key, argc, result)
     of cmdLongOption, cmdShortOption:
       parseFlag(key, val, result, kind)
     of cmdEnd: assert(false) # cannot happen
 
   if argc notin {1..2}:
     result.showHelp = true
+
+proc getCmdLine*(options: Options): string =
+  var cmdLine = options.cmdLine
+  cmdLine.add(options.getSourceDir().quoteShell)
+  cmdLine.add(options.getBuildDir().quoteShell)
+  return cmdLine.join(" ")

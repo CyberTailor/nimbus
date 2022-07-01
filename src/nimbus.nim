@@ -97,18 +97,14 @@ proc setup(options: Options) =
   ninja.newline()
 
   ninja.variable("nim", options.getNimBin())
-  ninja.variable("nimflags", options.getNimFlags())
   ninja.variable("nimbus", getAppFilename())
+  ninja.variable("nimflags", options.getNimFlags())
   ninja.variable("sourcedir", options.getSourceDir())
-  ninja.variable("builddir", options.getBuildDir())
-  ninja.variable("bindir", options.getBinDir())
-  ninja.variable("nimbledir", options.getNimbleDir())
-  ninja.variable("url", options.url)
+  ninja.variable("cmdline", options.getCmdLine())
   ninja.newline()
 
   ninja.rule("REGENERATE_BUILD",
-    command = "$nimbus --binDir:$bindir --nimbleDir:$nimbledir --nim:$nim " &
-              "--url:$url $nimflags $sourcedir $builddir",
+    command = "$nimbus $cmdline",
     description = "Regenerating build files.",
     pool = "console",
     generator = true)
