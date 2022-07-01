@@ -31,7 +31,11 @@ file is located.
 .It Ar buildDir
 Build directory,
 location where all generated files should be placed.
-In-source builds are explicitly banned.
+If this argument is omitted, the current directory is used instead.
+.Pp
+Note that the build directory must be different from the source directory.
+.Nm
+does not support building inside the source directory and attempting to do that leads to an error.
 .
 .It Fl Fl binDir : Ns Ar path
 Set the executable directory.
