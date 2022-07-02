@@ -7,9 +7,9 @@ discard """
 
 import strutils
 
-withDir("tests/testerscript/tests"):
-  for test in listFiles("."):
-    if test.startsWith("./t") and test.endsWith(".nim"):
+withDir("tests/testerscript"):
+  for test in listFiles("tests"):
+    if test.startsWith("tests/t") and test.endsWith(".nim"):
       echo "-- Running test ", test, "..."
       exec("/usr/bin/nim --hints:off -d:release --threads:on r " & test)
 '''

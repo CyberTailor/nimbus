@@ -6,15 +6,15 @@ import os, osproc, strutils
 import options
 
 proc writeTesterScript*(f: File, options: Options) =
-  let testsDir = options.getSourceDir() / "tests"
-
   f.write("""#!/usr/bin/env nim e
 
 import strutils
 
 withDir("$#"):
-  for test in listFiles("."):
-    if test.startsWith("./t") and test.endsWith(".nim"):
+  for test in listFiles("tests"):
+    if test.startsWith("tests/t") and test.endsWith(".nim"):
       echo "-- Running test ", test, "..."
       exec("$# --hints:off $# r " & test)
-""" % [testsDir, getNimBin(options).quoteShell, options.passNimFlags.join(" ")])
+""" % [options.getSourceDir(),
+       options.getNimBin().quoteShell,
+       options.getNimFlags()])
