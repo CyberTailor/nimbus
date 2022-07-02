@@ -54,6 +54,6 @@ let destDir = getEnv("DESTDIR")
   f.write('\n')
   f.writeMkDir(options.getBinDir())
   for bin in pkgInfo.bin:
-    let binWithExt = bin.addFileExt(ExeExt)
+    let binWithExt = bin.lastPathPart.addFileExt(ExeExt)
     f.writeCpFile(binWithExt, options.getBinDir() / binWithExt)
     f.makeExecutable(options.getBinDir() / binWithExt)

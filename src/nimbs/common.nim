@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 const
-  nimbusVersion* = "0.2.0"
+  nimbusVersion* = "0.2.1"
 
   defaultBinDir* = "/usr/local/bin"
   defaultNimbleDir* = "/opt/nimble"

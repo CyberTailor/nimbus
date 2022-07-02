@@ -149,7 +149,7 @@ proc setup(options: Options) =
   ninja.newline()
 
   for bin in pkgInfo.bin:
-    let output = bin.addFileExt(ExeExt)
+    let output = bin.lastPathPart.addFileExt(ExeExt)
     let input = pkgInfo.getSourceDir(options) / bin.addFileExt("nim")
     ninja.application(input, output, depPaths)
     ninja.newline()

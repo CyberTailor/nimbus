@@ -3,5 +3,5 @@
 
 version = "1.0"
 
-bin = @["main"]
+bin = @["tools/main"]
 skipFiles = @["README.md"]
