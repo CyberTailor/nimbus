@@ -156,8 +156,10 @@ proc setup(options: Options) =
 
   ninja.build(@["all"],
     rule = "phony",
-    inputs = map(pkgInfo.bin,
-                 proc(bin: string): string = bin.addFileExt(ExeExt)))
+    inputs = map(pkgInfo.bin, proc(bin: string): string =
+      bin.lastPathPart.addFileExt(ExeExt)
+    )
+  )
   ninja.default(@["all"])
   ninja.newline()
 
