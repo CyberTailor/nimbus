@@ -3,24 +3,37 @@
 
 discard """
   disabled: "win"
-  output: '''#!/usr/bin/env nim e
+"""
 
-import strutils
+import os, strutils, std/tempfiles
+import nimbs/options, nimbs/testerscript
 
-withDir("tests/testerscript"):
+const outputExpected = """#!/usr/bin/env nim e
+
+import os, strformat, strutils
+
+const
+  nimBin = @/usr/bin/nim@
+  nimFlags = @-d:release --threads:on@
+  nimCacheDir = @'build dir/nimcache'@
+
+withDir(@tests/testerscript@):
   for test in listFiles("tests"):
     if test.startsWith("tests/t") and test.endsWith(".nim"):
       echo "-- Running test ", test, "..."
-      exec("/usr/bin/nim --hints:off -d:release --threads:on r --nimcache:build/nimcache " & test)
-'''
-"""
-
-import os
-import nimbs/options, nimbs/testerscript
+      exec(fmt"{nimBin} --hints:off {nimFlags} r --nimcache:{nimCacheDir} {test.quoteShell}")
+""".replace("@", '"'.repeat(3))
 
 let opts = Options(sourceDir: "tests" / "testerscript",
-                   buildDir: "build",
+                   buildDir: "build dir",
                    nim: "/usr/bin/nim",
                    passNimFlags: @["-d:release", "--threads:on"])
 
-stdout.writeTesterScript(opts)
+let (cfile, path) = createTempFile("testerscript_", ".nim")
+cfile.writeTesterScript(opts)
+
+cfile.setFilePos(0)
+assert cfile.readAll() == outputExpected
+
+cfile.close()
+removeFile(path)
