@@ -11,7 +11,7 @@ withDir("tests/testerscript"):
   for test in listFiles("tests"):
     if test.startsWith("tests/t") and test.endsWith(".nim"):
       echo "-- Running test ", test, "..."
-      exec("/usr/bin/nim --hints:off -d:release --threads:on r " & test)
+      exec("/usr/bin/nim --hints:off -d:release --threads:on r --nimcache:build/nimcache " & test)
 '''
 """
 
@@ -19,6 +19,7 @@ import os
 import nimbs/options, nimbs/testerscript
 
 let opts = Options(sourceDir: "tests" / "testerscript",
+                   buildDir: "build",
                    nim: "/usr/bin/nim",
                    passNimFlags: @["-d:release", "--threads:on"])
 

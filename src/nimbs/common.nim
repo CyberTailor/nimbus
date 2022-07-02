@@ -9,6 +9,7 @@ const
   nimblePackagesDirName* = "pkgs2"
 
   packageMetadataFileName* = "nimblemeta.json"
+  nimCacheDirName* = "nimcache"
 
   installerFileName* = "installer.nims"
   testerFileName* = "tester.nims"

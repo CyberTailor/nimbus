@@ -14,7 +14,8 @@ withDir("$#"):
   for test in listFiles("tests"):
     if test.startsWith("tests/t") and test.endsWith(".nim"):
       echo "-- Running test ", test, "..."
-      exec("$# --hints:off $# r " & test)
+      exec("$# --hints:off $# r --nimcache:$# " & test)
 """ % [options.getSourceDir(),
        options.getNimBin().quoteShell,
-       options.getNimFlags()])
+       options.getNimFlags(),
+       options.getNimCache()])

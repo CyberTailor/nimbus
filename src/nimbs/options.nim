@@ -49,6 +49,9 @@ proc setLogger*(options: var Options) =
 proc getBuildDir*(options: Options): string =
   return options.buildDir
 
+proc getNimCache*(options: Options): string =
+  return options.getBuildDir() / nimCacheDirName
+
 proc setBuildDir*(options: var Options) =
   if options.buildDir.len != 0:
     options.buildDir = expandTilde(options.buildDir).absolutePath()
