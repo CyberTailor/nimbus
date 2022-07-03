@@ -9,6 +9,8 @@ import nimbs/common, nimbs/dependencyresolver, nimbs/installerscript,
        nimbs/version
 
 proc processDependencies(requires: seq[string], options: Options): seq[string] =
+  ## Checks package dependencies and returns list of paths for the Nim compiler,
+  ## shell-quoted.
   for req in requires:
     let dep = parseRequires(req)
     case dep.name
@@ -17,7 +19,7 @@ proc processDependencies(requires: seq[string], options: Options): seq[string] =
       if not withinRange(nimVer, dep.ver):
         raise unsatisfiedDependencyError("Unsatisfied Nim dependency")
     else:
-      result.add(dep.getPath(options))
+      result.add(dep.getPath(options).quoteShell)
 
 proc application(ninja: File, input, output: string, paths: seq[string]) =
   var vars = newStringTable()
@@ -158,10 +160,7 @@ proc setup(options: Options) =
 
   ninja.build(@["all"],
     rule = "phony",
-    inputs = map(pkgInfo.bin, proc(bin: string): string =
-      bin.lastPathPart.addFileExt(ExeExt)
-    )
-  )
+    inputs = pkgInfo.bin.mapIt(it.lastPathPart.addFileExt(ExeExt)))
   ninja.default(@["all"])
   ninja.newline()
 
