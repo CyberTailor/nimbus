@@ -17,8 +17,8 @@ stdout.comment("")
 
 stdout.newline()
 
-stdout.includeFile("samurai.build")
-stdout.includeFile("")
+stdout.include("samurai.build")
+stdout.include("")
 
 stdout.subninja("kabuto.build")
 stdout.subninja("")

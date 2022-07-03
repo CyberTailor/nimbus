@@ -26,10 +26,10 @@ proc application(ninja: File, input, output: string, paths: seq[string]) =
   if paths.len != 0:
     vars["paths"] = "-p:" & paths.join(" -p:")
 
-  ninja.build(@[output],
+  ninja.build([output],
     rule = "nimc",
-    inputs = @[input],
-    implicit = @["PHONY"], # FIXME: add depfile support to the Nim compiler
+    inputs = [input],
+    implicit = ["PHONY"], # FIXME: add depfile support to the Nim compiler
     variables = vars
   )
 
@@ -37,10 +37,10 @@ proc task(ninja: File, nimsFile, taskName: string) =
   var vars = newStringTable()
   vars["taskname"] = taskName
 
-  ninja.build(@[taskName],
+  ninja.build([taskName],
     rule = "nimbletask",
-    inputs = @[nimsFile],
-    implicit = @["PHONY"],
+    inputs = [nimsFile],
+    implicit = ["PHONY"],
     variables = vars
   )
 
@@ -135,21 +135,21 @@ proc setup(options: Options) =
     ninja.newline()
 
   ninja.comment("Phony build target, always out of date")
-  ninja.build(@["PHONY"], rule = "phony")
+  ninja.build(["PHONY"], rule = "phony")
   ninja.newline()
 
   for taskName in tasks:
     ninja.task(nimsFile, taskName)
     ninja.newline()
 
-  ninja.build(@["build.ninja"],
+  ninja.build(["build.ninja"],
     rule = "REGENERATE_BUILD",
-    inputs = @[pkgInfo.nimbleFile])
+    inputs = [pkgInfo.nimbleFile])
   ninja.newline()
 
-  ninja.build(@["reconfigure"],
+  ninja.build(["reconfigure"],
     rule = "REGENERATE_BUILD",
-    implicit = @["PHONY"])
+    implicit = ["PHONY"])
   ninja.newline()
 
   for bin in pkgInfo.bin:
@@ -158,23 +158,23 @@ proc setup(options: Options) =
     ninja.application(input, output, depPaths)
     ninja.newline()
 
-  ninja.build(@["all"],
+  ninja.build(["all"],
     rule = "phony",
     inputs = pkgInfo.bin.mapIt(it.lastPathPart.addFileExt(ExeExt)))
-  ninja.default(@["all"])
+  ninja.default(["all"])
   ninja.newline()
 
   if nimbleTests:
-    ninja.build(@["test"],
+    ninja.build(["test"],
       rule = "nimscript",
-      inputs = @[testerFileName],
-      implicit = @["PHONY", "all"])
+      inputs = [testerFileName],
+      implicit = ["PHONY", "all"])
     ninja.newline()
 
-  ninja.build(@["install"],
+  ninja.build(["install"],
     rule = "nimscript",
-    inputs = @[installerFileName],
-    implicit = @["PHONY", "all"])
+    inputs = [installerFileName],
+    implicit = ["PHONY", "all"])
   ninja.close()
 
 when isMainModule:

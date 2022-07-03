@@ -51,13 +51,14 @@ proc rule*(f: File, name, command: string; description, depfile, deps, pool,
   if restat:
       f.variable("restat", "1", indent = 1)
 
-proc escapePaths(paths: var seq[string]) =
+proc escapePaths(paths: var openArray[string]) =
   for i in 0..high(paths):
     paths[i] = paths[i].replace("$", "$$").replace(" ", "$ ").replace(":", "$:")
 
-proc build*(f: File, outputs: seq[string], rule: string; inputs, implicit,
-            orderOnly, implicitOutputs = newSeq[string]();
+proc build*(f: File, outputs: openArray[string], rule: string; inputs, implicit,
+            orderOnly, implicitOutputs: openArray[string] = [];
             variables: StringTableRef = nil; pool, dyndep = "") =
+  # note: filterIt converts openArray[string] to seq[string]
   var outputs = outputs.filterIt(it != "")
   if outputs.len == 0 or rule.len == 0:
     return
@@ -95,7 +96,7 @@ proc build*(f: File, outputs: seq[string], rule: string; inputs, implicit,
       for key, val in variables.pairs:
           f.variable(key, val, indent = 1)
 
-proc includeFile*(f: File, path: string) =
+proc `include`*(f: File, path: string) =
   if path.len != 0:
     f.line(&"include {path}")
 
@@ -103,7 +104,7 @@ proc subninja*(f: File, path: string) =
   if path.len != 0:
     f.line(&"subninja {path}")
 
-proc default*(f: File, paths: seq[string]) =
+proc default*(f: File, paths: openArray[string]) =
   var paths = paths.filterIt(it.len != 0)
   if paths.len != 0:
     f.line("default " & paths.join(" "))
