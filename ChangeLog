@@ -1,0 +1,22 @@
+2022-07-04  Anna  <cyber@sysrq.in>
+
+	* 0.2.4 tagged
+
+	* Implemented better quoting for generated NimScript and ninja.build.
+
+2022-07-02  Anna  <cyber@sysrq.in>
+
+	* 0.2.0 tagged
+
+	* Fixed build for binaries inside subdirectories.
+
+	* Added support for nimblecache in the build dir.
+
+	* packageinfo.nim (initPackageInfo): execute NimScript in parallel
+
+	* testerscript.nim (writeTesterScript): fix for tests that expect to
+	be run from the source root
+
+2022-06-29  Anna  <cyber@sysrq.in>
+
+	* 0.1.4 tagged

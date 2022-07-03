@@ -4,7 +4,7 @@
 import strutils
 
 const
-  nimbusVersion* = "0.2.3"
+  nimbusVersion* = "0.2.4"
 
   defaultBinDir* = "/usr/local/bin"
   defaultNimbleDir* = "/opt/nimble"

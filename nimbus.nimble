@@ -3,7 +3,7 @@
 
 # Package
 
-version       = "0.2.3"
+version       = "0.2.4"
 author        = "Anna"
 description   = "A Nim build system."
 license       = "BSD"
