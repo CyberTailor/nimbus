@@ -16,5 +16,5 @@ const
   installerFileName* = "installer.nims"
   testerFileName* = "tester.nims"
 
-proc tripleQuoted*(s: string): string =
+func tripleQuoted*(s: string): string =
   return '"'.repeat(3) & s & '"'.repeat(3)

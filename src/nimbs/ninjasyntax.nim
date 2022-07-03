@@ -51,7 +51,7 @@ proc rule*(f: File, name, command: string; description, depfile, deps, pool,
   if restat:
       f.variable("restat", "1", indent = 1)
 
-proc escapePaths(paths: var openArray[string]) =
+func escapePaths(paths: var openArray[string]) =
   for i in 0..high(paths):
     paths[i] = paths[i].replace("$", "$$").replace(" ", "$ ").replace(":", "$:")
 
@@ -110,7 +110,7 @@ proc default*(f: File, paths: openArray[string]) =
     f.line("default " & paths.join(" "))
 
 
-proc escape*(s: string): string =
+func escape*(s: string): string =
   ## Escape a string such that it can be embedded into a Ninja file without
   ## further interpretation.
   assert not s.contains("\n"), "Ninja syntax does not allow newlines"

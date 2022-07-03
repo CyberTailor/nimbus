@@ -35,17 +35,17 @@ type
 const
   notSetVersion* = Version(version: "-1")
 
-proc parseVersionError*(msg: string): ref ParseVersionError =
+func parseVersionError*(msg: string): ref ParseVersionError =
   result = newException(ParseVersionError, msg)
 
-template `$`*(ver: Version): string = ver.version
+func `$`*(ver: Version): string = ver.version
 
-proc newVersion*(ver: string): Version =
+func newVersion*(ver: string): Version =
   if ver.len != 0 and ver[0] notin {'\0'} + Digits:
     raise parseVersionError("Wrong version: " & ver)
   return Version(version: ver)
 
-proc `<`*(ver: Version, ver2: Version): bool =
+func `<`*(ver: Version, ver2: Version): bool =
   # Handling for normal versions such as "0.1.0" or "1.0".
   var sVer = ver.version.split('.')
   var sVer2 = ver2.version.split('.')
@@ -63,7 +63,7 @@ proc `<`*(ver: Version, ver2: Version): bool =
     else:
       return false
 
-proc `==`*(ver: Version, ver2: Version): bool =
+func `==`*(ver: Version, ver2: Version): bool =
   var sVer = ver.version.split('.')
   var sVer2 = ver2.version.split('.')
   for i in 0..max(sVer.len, sVer2.len)-1:
@@ -78,10 +78,10 @@ proc `==`*(ver: Version, ver2: Version): bool =
     else:
       return false
 
-proc `<=`*(ver: Version, ver2: Version): bool =
+func `<=`*(ver: Version, ver2: Version): bool =
   return (ver == ver2) or (ver < ver2)
 
-proc `==`*(range1: VersionRange, range2: VersionRange): bool =
+func `==`*(range1: VersionRange, range2: VersionRange): bool =
   if range1.kind != range2.kind : return false
   result = case range1.kind
   of verLater, verEarlier, verEqLater, verEqEarlier, verEq:
@@ -90,7 +90,7 @@ proc `==`*(range1: VersionRange, range2: VersionRange): bool =
     range1.verILeft == range2.verILeft and range1.verIRight == range2.verIRight
   of verAny: true
 
-proc withinRange*(ver: Version, ran: VersionRange): bool =
+func withinRange*(ver: Version, ran: VersionRange): bool =
   case ran.kind
   of verLater:
     return ver > ran.ver
@@ -107,10 +107,10 @@ proc withinRange*(ver: Version, ran: VersionRange): bool =
   of verAny:
     return true
 
-proc contains*(ran: VersionRange, ver: Version): bool =
+func contains*(ran: VersionRange, ver: Version): bool =
   return withinRange(ver, ran)
 
-proc getNextIncompatibleVersion(version: Version, semver: bool): Version =
+func getNextIncompatibleVersion(version: Version, semver: bool): Version =
   ## try to get next higher version to exclude according to semver semantic
   var numbers = version.version.split('.')
   let originalNumberLen = numbers.len
@@ -141,7 +141,7 @@ proc getNextIncompatibleVersion(version: Version, semver: bool): Version =
     inc(zeroPosition)
   result = newVersion(numbers.join("."))
 
-proc makeRange(version: Version, op: string): VersionRange =
+func makeRange(version: Version, op: string): VersionRange =
   if version == notSetVersion:
     raise parseVersionError("A version needs to accompany the operator.")
 
@@ -171,7 +171,7 @@ proc makeRange(version: Version, op: string): VersionRange =
   else:
     raise parseVersionError("Invalid operator: " & op)
 
-proc parseVersionRange*(s: string): VersionRange =
+func parseVersionRange*(s: string): VersionRange =
   # >= 1.5 & <= 1.8
   if s.len == 0:
     result = VersionRange(kind: verAny)
@@ -218,7 +218,7 @@ proc parseVersionRange*(s: string): VersionRange =
     inc(i)
   result = makeRange(newVersion(version), op)
 
-proc `$`*(verRange: VersionRange): string =
+func `$`*(verRange: VersionRange): string =
   case verRange.kind
   of verLater:
     result = "> "

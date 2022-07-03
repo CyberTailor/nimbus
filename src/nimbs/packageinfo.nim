@@ -75,14 +75,14 @@ proc initPackageInfo*(options: Options): PackageInfo =
   result.installExt = ^installExt
   result.srcDir = ^srcDir
 
-proc getSourceDir*(pkgInfo: PackageInfo, options: Options): string =
+func getSourceDir*(pkgInfo: PackageInfo, options: Options): string =
   ## Returns the directory containing the package source files.
   if pkgInfo.srcDir.len != 0:
     return options.getSourceDir() / pkgInfo.srcDir
   else:
     return options.getSourceDir()
 
-proc checkInstallFile(pkgInfo: PackageInfo, sourceDir, file: string): bool =
+func checkInstallFile(pkgInfo: PackageInfo, sourceDir, file: string): bool =
   ## Checks whether ``file`` should be installed.
   ## ``True`` means file should be skipped.
   if file == pkgInfo.nimbleFile:
@@ -99,7 +99,7 @@ proc checkInstallFile(pkgInfo: PackageInfo, sourceDir, file: string): bool =
 
   if splitFile(file).name[0] == '.': return true
 
-proc checkInstallDir(pkgInfo: PackageInfo, sourceDir, dir: string): bool =
+func checkInstallDir(pkgInfo: PackageInfo, sourceDir, dir: string): bool =
   ## Determines whether ``dir`` should be installed.
   ## ``True`` means dir should be skipped.
   for ignoreDir in pkgInfo.skipDirs:

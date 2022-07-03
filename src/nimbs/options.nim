@@ -46,10 +46,10 @@ proc setLogger*(options: var Options) =
   options.logger = newConsoleLogger()
   addHandler(options.logger)
 
-proc getBuildDir*(options: Options): string =
+func getBuildDir*(options: Options): string =
   return options.buildDir
 
-proc getNimCache*(options: Options): string =
+func getNimCache*(options: Options): string =
   return options.getBuildDir() / nimCacheDirName
 
 proc setBuildDir*(options: var Options) =
@@ -59,7 +59,7 @@ proc setBuildDir*(options: var Options) =
   else:
     options.buildDir = getCurrentDir()
 
-proc getSourceDir*(options: Options): string =
+func getSourceDir*(options: Options): string =
   return options.sourceDir
 
 proc setSourceDir*(options: var Options) =
@@ -67,11 +67,11 @@ proc setSourceDir*(options: var Options) =
   if not dirExists(options.sourceDir):
     quit("Source directory $1 does not exist" % options.sourceDir)
 
-proc getNimbleDir*(options: Options): string =
+func getNimbleDir*(options: Options): string =
   ## Get the Nimble directory.
   return options.nimbleDir
 
-proc getPkgsDir*(options: Options): string =
+func getPkgsDir*(options: Options): string =
   ## Get the packages directory inside the Nimble directory.
   options.getNimbleDir() / nimblePackagesDirName
 
@@ -82,7 +82,7 @@ proc setNimbleDir*(options: var Options) =
   else:
     options.nimbleDir = defaultNimbleDir
 
-proc getBinDir*(options: Options): string =
+func getBinDir*(options: Options): string =
   ## Get the executable directory.
   return options.binDir
 
@@ -120,13 +120,13 @@ proc setNimBin*(options: var Options) =
       # Nim not found in PATH
       quit("Unable to find `nim` binary - add to $PATH or use `--nim`")
 
-proc getNimBin*(options: Options): string =
+func getNimBin*(options: Options): string =
   return options.nim
 
-proc getNimFlags*(options: Options): string =
+func getNimFlags*(options: Options): string =
   return options.passNimFlags.join(" ")
 
-proc getFlagString(kind: CmdLineKind, flag, val: string): string =
+func getFlagString(kind: CmdLineKind, flag, val: string): string =
   ## Make a flag string from components. The result is quoted.
   let prefix =
     case kind
@@ -139,7 +139,7 @@ proc getFlagString(kind: CmdLineKind, flag, val: string): string =
     result = prefix & flag & ":" & val
   return result.quoteShell
 
-proc parseFlag(flag, val: string, result: var Options, kind = cmdLongOption) =
+func parseFlag(flag, val: string, result: var Options, kind = cmdLongOption) =
   let f = flag.normalize()
   let flagString = getFlagString(kind, flag, val)
 
@@ -153,7 +153,7 @@ proc parseFlag(flag, val: string, result: var Options, kind = cmdLongOption) =
 
   result.cmdline.add(flagString)
 
-proc parseArgument(key: string, argc: var int, result: var Options) =
+func parseArgument(key: string, argc: var int, result: var Options) =
   inc argc
   case argc
   of 1: result.sourceDir = key
@@ -173,7 +173,7 @@ proc parseCmdLine*(): Options =
   if argc notin {1..2}:
     result.showHelp = true
 
-proc getCmdLine*(options: Options): string =
+func getCmdLine*(options: Options): string =
   var cmdLine = options.cmdLine
   cmdLine.add(options.getSourceDir().quoteShell)
   cmdLine.add(options.getBuildDir().quoteShell)

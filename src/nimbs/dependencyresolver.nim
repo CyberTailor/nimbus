@@ -15,10 +15,10 @@ type
 
   UnsatisfiedDependencyError* = object of CatchableError
 
-proc `<`(pkg: Package, pkg2: Package): bool =
+func `<`(pkg: Package, pkg2: Package): bool =
   return pkg.version < pkg2.version
 
-proc unsatisfiedDependencyError*(msg: string): ref UnsatisfiedDependencyError =
+func unsatisfiedDependencyError*(msg: string): ref UnsatisfiedDependencyError =
   result = newException(UnsatisfiedDependencyError, msg)
 
 proc unsupportedPkgWarning(dirName: string) =
@@ -92,8 +92,8 @@ proc parseRequires*(req: string): PkgTuple =
     quit("Unable to parse dependency version range: " &
          getCurrentExceptionMsg())
 
-proc `$`*(pkg: Package): string =
+func `$`*(pkg: Package): string =
   return pkg.name & "@" & $pkg.version
 
-proc `$`*(dep: PkgTuple): string =
+func `$`*(dep: PkgTuple): string =
   return dep.name & "@" & $dep.ver
