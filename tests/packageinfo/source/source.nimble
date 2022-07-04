@@ -3,6 +3,6 @@
 
 version = "1.0"
 
-skipDirs = @["test"]
+skipDirs = @["_test"]
 skipFiles = @["README.md"]
 skipExt = @["test"]
