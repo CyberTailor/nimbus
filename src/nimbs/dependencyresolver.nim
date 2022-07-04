@@ -21,11 +21,12 @@ func `<`(pkg: Package, pkg2: Package): bool =
 func unsatisfiedDependencyError*(msg: string): ref UnsatisfiedDependencyError =
   result = newException(UnsatisfiedDependencyError, msg)
 
-proc unsupportedPkgWarning(dirName: string) =
-  warn("Skipped unsupported package: " & dirName)
-
 proc initPkgList(options: Options): seq[Package] =
   ## Scan the Nimble directory for packages.
+
+  proc unsupportedPkgWarning(dirName: string) =
+    warn("[initPkgList] Skipped unsupported package: " & dirName)
+
   for kind, path in walkDir(options.getPkgsDir):
     if kind in {pcDir, pcLinkToDir}:
       let dirName = path.lastPathPart

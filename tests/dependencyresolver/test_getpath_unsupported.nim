@@ -6,9 +6,9 @@ discard """
   sortoutput: true
   output: '''--   Found packageA, version 0.5.0
 -- Checking for packageA
-WARN Skipped unsupported package: packageA
-WARN Skipped unsupported package: packageA-#abc123
-WARN Skipped unsupported package: packageA-abc
+WARN [initPkgList] Skipped unsupported package: packageA
+WARN [initPkgList] Skipped unsupported package: packageA-#abc123
+WARN [initPkgList] Skipped unsupported package: packageA-abc
 '''
 """
 
