@@ -9,7 +9,11 @@ const sourceDir = "tests" / "packageinfo" / "binary"
 var opts = Options(sourceDir: sourceDir)
 opts.setNimBin
 
-let files = initPackageInfo(opts).getInstallFiles(opts).sorted
+let pkgInfo = initPackageInfo(opts)
+assert pkgInfo.name == "binary"
+assert pkgInfo.version == "1.0"
+
+let files = pkgInfo.getInstallFiles(opts).sorted
 assert files == @[
   (pcFile, sourceDir / "tools" / "main.nim"),
   (pcDir, sourceDir / "tools")

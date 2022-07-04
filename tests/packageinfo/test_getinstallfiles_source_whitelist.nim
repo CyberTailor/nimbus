@@ -9,7 +9,11 @@ const sourceDir = "tests" / "packageinfo" / "source-whitelist"
 var opts = Options(sourceDir: sourceDir)
 opts.setNimBin
 
-let files = initPackageInfo(opts).getInstallFiles(opts).sorted
+let pkgInfo = initPackageInfo(opts)
+assert pkgInfo.name == "source-whitelist"
+assert pkgInfo.version == "1.0"
+
+let files = pkgInfo.getInstallFiles(opts).sorted
 assert files == @[
   (pcFile, sourceDir / "file1.nim"),
   (pcFile, sourceDir / "file2.nim")

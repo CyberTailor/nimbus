@@ -2,7 +2,8 @@
 # SPDX-FileCopyrightText: 2022 Anna <cyber@sysrq.in>
 # SPDX-License-Identifier: BSD-3-Clause
 
-import logging, os, sequtils, threadpool
+import threadpool except spawnX
+import logging, os, sequtils
 
 import nimbleexecutor, options
 
@@ -25,11 +26,15 @@ type
     kind: PathComponent
     path: string
 
-proc getPackageName*(nimbleFile: string, options: Options): string =
-  let packageName = nimbleFile.queryString("packageName", options)
-  if packageName.len != 0:
-    return packageName
-  return splitFile(nimbleFile).name
+  SpawnKind = enum
+    spawnSimple, spawnParallel
+
+  Spawn[T] = object
+    case kind: SpawnKind
+    of spawnSimple:
+      value: T
+    of spawnParallel:
+      flowVar: FlowVar[T]
 
 proc findNimbleFile*(dir: string): string =
   var hits = 0
@@ -45,24 +50,44 @@ proc findNimbleFile*(dir: string): string =
     quit("Could not find a file with a .nimble extension inside the " &
          "specified directory: " & dir)
 
+proc `^`[T](s: Spawn[T]): T =
+  case s.kind
+  of spawnSimple:
+    return s.value
+  of spawnParallel:
+    return ^s.flowVar
+
+template spawnX[T](call: sink typed): untyped =
+  if preferSpawn():
+    Spawn[T](kind: spawnParallel, flowVar: spawn call)
+  else:
+    Spawn[T](kind: spawnSimple, value: call)
+
+proc queryStringX(nimbleFile, variable: string, options: Options): Spawn[string] =
+  return spawnX[string] nimbleFile.queryString(variable, options)
+
+proc queryArrayX(nimbleFile, variable: string, options: Options): Spawn[seq[string]] =
+  return spawnX[seq[string]] nimbleFile.queryArray(variable, options)
+
 proc initPackageInfo*(options: Options): PackageInfo =
   let nimbleFile = options.getSourceDir().findNimbleFile()
+  result.nimbleFile = nimbleFile
 
-  let name = spawn nimbleFile.getPackageName(options)
-  let version = spawn nimbleFile.queryString("version", options)
-  let requires = spawn nimbleFile.queryArray("requiresData", options)
-  let bin = spawn nimbleFile.queryArray("bin", options)
-  let skipDirs = spawn nimbleFile.queryArray("skipDirs", options)
-  let skipFiles = spawn nimbleFile.queryArray("skipFiles", options)
-  let skipExt = spawn nimbleFile.queryArray("skipExt", options)
-  let installDirs = spawn nimbleFile.queryArray("installDirs", options)
-  let installFiles = spawn nimbleFile.queryArray("installFiles", options)
-  let installExt = spawn nimbleFile.queryArray("installExt", options)
-  let srcDir = spawn nimbleFile.queryString("srcDir", options)
+  let
+    name         = nimbleFile.queryStringX("packageName", options)
+    version      = nimbleFile.queryStringX("version", options)
+    requires     = nimbleFile.queryArrayX("requiresData", options)
+    bin          = nimbleFile.queryArrayX("bin", options)
+    skipDirs     = nimbleFile.queryArrayX("skipDirs", options)
+    skipFiles    = nimbleFile.queryArrayX("skipFiles", options)
+    skipExt      = nimbleFile.queryArrayX("skipExt", options)
+    installDirs  = nimbleFile.queryArrayX("installDirs", options)
+    installFiles = nimbleFile.queryArrayX("installFiles", options)
+    installExt   = nimbleFile.queryArrayX("installExt", options)
+    srcDir       = nimbleFile.queryStringX("srcDir", options)
 
   sync()
 
-  result.nimbleFile = nimbleFile
   result.name = ^name
   result.version = ^version
   result.requires = ^requires
@@ -74,6 +99,9 @@ proc initPackageInfo*(options: Options): PackageInfo =
   result.installFiles = ^installFiles
   result.installExt = ^installExt
   result.srcDir = ^srcDir
+  
+  if result.name.len == 0:
+    result.name = splitFile(nimbleFile).name
 
 func getSourceDir*(pkgInfo: PackageInfo, options: Options): string =
   ## Returns the directory containing the package source files.
