@@ -1,6 +1,6 @@
 2022-07-04  Anna  <cyber@sysrq.in>
 
-	* 0.2.4 tagged
+	* 0.2.4, 0.2.5 tagged
 
 	* Implemented better quoting for generated NimScript and ninja.build.
 
