@@ -1,12 +1,23 @@
 # SPDX-FileCopyrightText: 2022 Anna <cyber@sysrq.in>
 # SPDX-License-Identifier: BSD-3-Clause
 
-import json, os, osproc, sequtils, strformat, strutils
+import json, logging, os, osproc, sequtils, strformat, strutils, times
 
 import options
 
 proc query(nimbleFile, variable: string, options: Options): string =
   ## Return a NimScript variable as a JSON object.
+
+  proc debugFn(s: string) =
+    debug("[query] " & s)
+    stdout.flushFile()
+
+  var timeStart: float
+  options.initLogger()
+  if options.debug:
+    timeStart = epochTime()
+    debugFn(fmt"Started querying NimScript variable '{variable}'")
+
   let cmd = (
     "$# $# --eval:'import json; include \"$#\"; echo %$#'" % [
       getNimBin(options).quoteShell,
@@ -20,6 +31,10 @@ proc query(nimbleFile, variable: string, options: Options): string =
   (result, exitCode) = execCmdEx(cmd)
   if exitCode != QuitSuccess:
     quit(fmt"Failed to get the value of `{variable}` from {nimbleFile}")
+
+  if options.debug:
+    let time = epochTime() - timeStart
+    debugFn(fmt"Finished querying NimScript variable '{variable}' ({time:.2f} s)")
 
 proc queryString*(nimbleFile, variable: string, options: Options): string =
   result = nimbleFile.query(variable, options).parseJson().getStr()

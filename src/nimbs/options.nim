@@ -9,6 +9,7 @@ import common
 type
   Options* = object
     showHelp*: bool
+    debug*: bool
     nimbleDir*: string
     binDir*: string
     nim*: string # Nim compiler location
@@ -21,8 +22,8 @@ type
 
 const
   help* = """
-Usage: nimbus [-h] [--nimbleDir:path] [--binDir:path] [--nim:path] [--url:url]
-              [nim opts...] sourceDir [buildDir]
+Usage: nimbus [-h] [--debug] [--nimbleDir:path] [--binDir:path] [--nim:path]
+              [--url:url] [nim opts...] sourceDir [buildDir]
 
 positional arguments:
   sourceDir
@@ -30,6 +31,7 @@ positional arguments:
 
 optional arguments:
   -h, --help          show this help message and exit
+  --debug             Show debugging information.
   --nimbleDir:path    Nimble directory (default: $1).
   --binDir:path       Executable directory (default: $2).
   --nim:path          Nim compiler (default: nim).
@@ -42,9 +44,17 @@ proc writeHelp*() =
   echo(help)
   quit(QuitSuccess)
 
+proc initLogger*(options: Options) =
+  if getHandlers().len != 0:
+    return
+
+  addHandler(options.logger)
+  if options.debug:
+    setLogFilter(lvlDebug)
+
 proc setLogger*(options: var Options) =
   options.logger = newConsoleLogger()
-  addHandler(options.logger)
+  options.initLogger()
 
 func getBuildDir*(options: Options): string =
   return options.buildDir
@@ -145,6 +155,7 @@ func parseFlag(flag, val: string, result: var Options, kind = cmdLongOption) =
 
   case f
   of "help", "h": result.showHelp = true
+  of "debug": result.debug = true
   of "nimbledir": result.nimbleDir = val
   of "bindir": result.binDir = val
   of "nim": result.nim = val

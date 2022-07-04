@@ -9,6 +9,7 @@
 .Nd a Nim build system
 .Sh SYNOPSIS
 .Nm
+.Op Fl Fl debug
 .Op Fl Fl binDir : Ns Ar path
 .Op Fl Fl nimbleDir : Ns Ar path
 .Op Fl Fl nim : Ns Ar path
@@ -41,11 +42,14 @@ does not support building inside the source directory and attempting to do that 
 .It Fl Fl binDir : Ns Ar path
 Set the executable directory, where project's binaries will be installed.
 .
-.It Fl Fl nimbleDir : Ns Ar path
-Set the Nimble directory, where project's sources will be installed.
+.It Fl Fl debug
+Show debugging information.
 .
 .It Fl Fl nim : Ns Ar path
 Set the Nim executable.
+.
+.It Fl Fl nimbleDir : Ns Ar path
+Set the Nimble directory, where project's sources will be installed.
 .
 .It Fl Fl url : Ns Ar url
 If this options is set,
