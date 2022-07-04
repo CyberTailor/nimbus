@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 import threadpool except spawnX
-import logging, os, sequtils
+import logging, os, sequtils, strformat, times
 
 import nimbleexecutor, options
 
@@ -57,7 +57,7 @@ proc `^`[T](s: Spawn[T]): T =
   of spawnParallel:
     return ^s.flowVar
 
-template spawnX[T](call: sink typed): untyped =
+template spawnX[T](call: sink typed): Spawn[T] =
   if preferSpawn():
     Spawn[T](kind: spawnParallel, flowVar: spawn call)
   else:
@@ -70,8 +70,18 @@ proc queryArrayX(nimbleFile, variable: string, options: Options): Spawn[seq[stri
   return spawnX[seq[string]] nimbleFile.queryArray(variable, options)
 
 proc initPackageInfo*(options: Options): PackageInfo =
+  ## Fill a new PackageInfo object using values from the Nimble file.
+
+  proc debugFn(s: string) =
+    debug("[initPackageInfo] " & s)
+
   let nimbleFile = options.getSourceDir().findNimbleFile()
   result.nimbleFile = nimbleFile
+
+  var timeStart: float
+  if options.debug:
+    timeStart = epochTime()
+    debugFn("Started querying " & nimbleFile)
 
   let
     name         = nimbleFile.queryStringX("packageName", options)
@@ -87,6 +97,9 @@ proc initPackageInfo*(options: Options): PackageInfo =
     srcDir       = nimbleFile.queryStringX("srcDir", options)
 
   sync()
+  if options.debug:
+    let time = epochTime() - timeStart
+    debugFn(fmt"Finished querying {nimbleFile} ({time:.2f} s)")
 
   result.name = ^name
   result.version = ^version

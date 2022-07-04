@@ -7,7 +7,7 @@
 	* nimbleexecutor.nim (query): add debug output
 
 	* packageinfo.nim (initPackageInfo): use custom spawnX-like wrappers
-	to avoid spawning too much threads
+	to avoid spawning too much threads, add debug info
 
 2022-07-02  Anna  <cyber@sysrq.in>
 
