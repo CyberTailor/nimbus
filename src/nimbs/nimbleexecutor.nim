@@ -5,7 +5,7 @@ import json, logging, os, osproc, sequtils, strformat, strutils, times
 
 import options
 
-proc query(nimbleFile, variable: string, options: Options): string =
+proc query(nimbleFile, variable: string, options: Options): string {.thread.} =
   ## Return a NimScript variable as a JSON object.
 
   proc debugFn(s: string) =
@@ -36,10 +36,12 @@ proc query(nimbleFile, variable: string, options: Options): string =
     let time = epochTime() - timeStart
     debugFn(fmt"Finished querying NimScript variable '{variable}' ({time:.2f} s)")
 
-proc queryString*(nimbleFile, variable: string, options: Options): string =
+proc queryString*(nimbleFile, variable: string,
+                  options: Options): string {.thread.}=
   result = nimbleFile.query(variable, options).parseJson().getStr()
 
-proc queryArray*(nimbleFile, variable: string, options: Options): seq[string] =
+proc queryArray*(nimbleFile, variable: string,
+                 options: Options): seq[string] {.thread.} =
   result = nimbleFile.query(variable, options).parseJson().to(seq[string])
 
 proc getTasks*(nimsFile: string, options: Options): seq[string] =
