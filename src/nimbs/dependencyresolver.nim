@@ -56,7 +56,7 @@ proc getNimVersion*(options: Options): Version =
 
 proc getPath*(depPkg: PkgTuple, options: Options): string =
   ## Return a path for using with the `--path` Nim compiler option.
-  var pkgList {.global.}: seq[Package] = @[]
+  var pkgList {.threadvar.}: seq[Package]
   once: pkgList = initPkgList(options)
 
   echo "-- Checking for " & depPkg.name
