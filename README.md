@@ -8,6 +8,10 @@ nimbus
 would also be a clever name but it's already taken (turns out the name "nimbus"
 is taken two times already but nobody cares yet).
 
+[Read the manpage online][man]
+
+[man]: https://docs.sysrq.in/nimbus
+
 
 Raison d'être
 -------------
