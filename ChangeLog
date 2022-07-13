@@ -4,6 +4,8 @@
 
 	* nimbleexecutor.nim (toJsonString): query variables in bulk
 
+	* nimbus.nim: add debug output
+
 2022-07-04  Anna  <cyber@sysrq.in>
 
 	* 0.2.4, 0.2.5 tagged
