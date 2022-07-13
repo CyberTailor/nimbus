@@ -54,6 +54,14 @@ $ testament all
 ```
 
 
+Packaging
+---------
+
+You can track new releases using an [atom feed][atom] provided by GitHub.
+
+[atom]: https://github.com/cybertailor/nimbus/releases.atom
+
+
 Contributing
 ------------
 
