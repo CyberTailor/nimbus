@@ -2,8 +2,12 @@
 # SPDX-FileCopyrightText: 2022 Anna <cyber@sysrq.in>
 # SPDX-License-Identifier: BSD-3-Clause
 
-import std/threadpool except spawnX
 import std/[logging, os, sequtils, strformat, times]
+
+when defined(withWeave):
+  import weave
+else:
+  import dummythreading
 
 import nimbleexecutor, options
 
@@ -26,16 +30,6 @@ type
     kind: PathComponent
     path: string
 
-  SpawnKind = enum
-    spawnSimple, spawnParallel
-
-  Spawn[T] = object
-    case kind: SpawnKind
-    of spawnSimple:
-      value: T
-    of spawnParallel:
-      flowVar: FlowVar[T]
-
 proc findNimbleFile*(dir: string): string =
   var hits = 0
   for kind, path in walkDir(dir):
@@ -49,25 +43,6 @@ proc findNimbleFile*(dir: string): string =
   elif hits == 0:
     quit("Could not find a file with a .nimble extension inside the " &
          "specified directory: " & dir)
-
-proc `^`[T](s: Spawn[T]): T =
-  case s.kind
-  of spawnSimple:
-    return s.value
-  of spawnParallel:
-    return ^s.flowVar
-
-template spawnX[T](call: sink typed): Spawn[T] =
-  if preferSpawn():
-    Spawn[T](kind: spawnParallel, flowVar: spawn call)
-  else:
-    Spawn[T](kind: spawnSimple, value: call)
-
-proc queryStringX(nimbleFile, variable: string, options: Options): Spawn[string] =
-  return spawnX[string] nimbleFile.queryString(variable, options)
-
-proc queryArrayX(nimbleFile, variable: string, options: Options): Spawn[seq[string]] =
-  return spawnX[seq[string]] nimbleFile.queryArray(variable, options)
 
 proc initPackageInfo*(options: Options): PackageInfo =
   ## Fill a new PackageInfo object using values from the Nimble file.
@@ -83,35 +58,38 @@ proc initPackageInfo*(options: Options): PackageInfo =
     timeStart = epochTime()
     debugFn("Started querying " & nimbleFile)
 
+  init(Weave)
   let
-    name         = nimbleFile.queryStringX("packageName", options)
-    version      = nimbleFile.queryStringX("version", options)
-    requires     = nimbleFile.queryArrayX("requiresData", options)
-    bin          = nimbleFile.queryArrayX("bin", options)
-    skipDirs     = nimbleFile.queryArrayX("skipDirs", options)
-    skipFiles    = nimbleFile.queryArrayX("skipFiles", options)
-    skipExt      = nimbleFile.queryArrayX("skipExt", options)
-    installDirs  = nimbleFile.queryArrayX("installDirs", options)
-    installFiles = nimbleFile.queryArrayX("installFiles", options)
-    installExt   = nimbleFile.queryArrayX("installExt", options)
-    srcDir       = nimbleFile.queryStringX("srcDir", options)
+    name         = spawn nimbleFile.queryString("packageName", options)
+    version      = spawn nimbleFile.queryString("version", options)
+    requires     = spawn nimbleFile.queryArray("requiresData", options)
+    bin          = spawn nimbleFile.queryArray("bin", options)
+    skipDirs     = spawn nimbleFile.queryArray("skipDirs", options)
+    skipFiles    = spawn nimbleFile.queryArray("skipFiles", options)
+    skipExt      = spawn nimbleFile.queryArray("skipExt", options)
+    installDirs  = spawn nimbleFile.queryArray("installDirs", options)
+    installFiles = spawn nimbleFile.queryArray("installFiles", options)
+    installExt   = spawn nimbleFile.queryArray("installExt", options)
+    srcDir       = spawn nimbleFile.queryString("srcDir", options)
 
-  sync()
+  syncRoot(Weave)
+  exit(Weave)
+
   if options.debug:
     let time = epochTime() - timeStart
     debugFn(fmt"Finished querying {nimbleFile} ({time:.2f} s)")
 
-  result.name = ^name
-  result.version = ^version
-  result.requires = ^requires
-  result.bin = ^bin
-  result.skipDirs = ^skipDirs
-  result.skipFiles = ^skipFiles
-  result.skipExt = ^skipExt
-  result.installDirs = ^installDirs
-  result.installFiles = ^installFiles
-  result.installExt = ^installExt
-  result.srcDir = ^srcDir
+  result.name         = sync(name)
+  result.version      = sync(version)
+  result.requires     = sync(requires)
+  result.bin          = sync(bin)
+  result.skipDirs     = sync(skipDirs)
+  result.skipFiles    = sync(skipFiles)
+  result.skipExt      = sync(skipExt)
+  result.installDirs  = sync(installDirs)
+  result.installFiles = sync(installFiles)
+  result.installExt   = sync(installExt)
+  result.srcDir       = sync(srcDir)
   
   if result.name.len == 0:
     result.name = splitFile(nimbleFile).name

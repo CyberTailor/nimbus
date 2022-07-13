@@ -14,7 +14,8 @@ installExt = @["nim"]
 
 # Dependencies
 
-requires "nim >= 0.13.0"
+requires "nim >= 1.2.0"
+requires "weave"
 
 # Tasks
 
