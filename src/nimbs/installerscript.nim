@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2022 Anna <cyber@sysrq.in>
 # SPDX-License-Identifier: BSD-3-Clause
 
-import os, strformat
+import std/[os, strformat]
 
 import common, options, packageinfo
 

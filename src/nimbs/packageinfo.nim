@@ -2,8 +2,8 @@
 # SPDX-FileCopyrightText: 2022 Anna <cyber@sysrq.in>
 # SPDX-License-Identifier: BSD-3-Clause
 
-import threadpool except spawnX
-import logging, os, sequtils, strformat, times
+import std/threadpool except spawnX
+import std/[logging, os, sequtils, strformat, times]
 
 import nimbleexecutor, options
 

@@ -3,7 +3,7 @@
 
 ## Module for handling versions and version ranges such as ``>= 1.0 & <= 1.5``
 
-import parseutils, strutils
+import std/[parseutils, strutils]
 
 type
   Version* {.requiresInit.} = object

@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2022 Anna <cyber@sysrq.in>
 # SPDX-License-Identifier: BSD-3-Clause
 
-import json, logging, os, osproc, sequtils, strformat, strutils, times
+import std/[json, logging, os, osproc, sequtils, strformat, strutils, times]
 
 import options
 

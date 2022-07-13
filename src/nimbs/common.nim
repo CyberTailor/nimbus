@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: Copyright (C) Dominik Picheta. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause
 
-import strutils
+import std/strutils
 
 const
   nimbusVersion* = "0.2.5"

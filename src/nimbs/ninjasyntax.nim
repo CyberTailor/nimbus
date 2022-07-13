@@ -6,7 +6,7 @@
 ## A module for generating .ninja files.
 ## RTFM: https://ninja-build.org/manual.html
 
-import sequtils, strformat, strtabs, strutils
+import std/[sequtils, strformat, strtabs, strutils]
 
 proc newline*(f: File) =
   f.write('\n')

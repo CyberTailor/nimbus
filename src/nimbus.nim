@@ -1,12 +1,11 @@
 # SPDX-FileCopyrightText: 2022 Anna <cyber@sysrq.in>
 # SPDX-License-Identifier: BSD-3-Clause
 
-import os, sequtils, strtabs, strutils
+import std/[os, sequtils, strtabs, strutils]
 
-import nimbs/common, nimbs/dependencyresolver, nimbs/installerscript,
-       nimbs/ninjasyntax, nimbs/nimbleexecutor, nimbs/options,
-       nimbs/packageinfo, nimbs/packagemetadata, nimbs/testerscript,
-       nimbs/version
+import nimbs/[common, dependencyresolver, installerscript, ninjasyntax,
+              nimbleexecutor, options, packageinfo, packagemetadata,
+              testerscript, version]
 
 proc processDependencies(requires: seq[string], options: Options): seq[string] =
   ## Checks package dependencies and returns list of paths for the Nim compiler,
