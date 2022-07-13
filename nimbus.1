@@ -54,10 +54,6 @@ Set the Nim executable.
 .
 .It Fl Fl url : Ns Ar url
 If this options is set,
-.
-.It Fl Fl useDepfile
-Tell the Nim compiler to make a depfile.
-Only available with patched Nim.
 .Nm
 will generate and install a
 .Pa nimblemeta.json
@@ -65,9 +61,50 @@ file.
 Some packages specify their dependencies using URLs and
 .Nm
 is unable to find them unless such metadata file exists.
+.
+.It Fl Fl useDepfile
+Tell the Nim compiler to make a depfile.
+Only available with patched Nim.
 .El
 .Pp
 All unrecognized flags are passed to the Nim compiler.
+.
+.Ss NimScript tasks
+.Nm
+will create a ninja target for each task defined in the
+.Pa .nimble
+file.
+.
+.Ss Running tests
+If no tasks named
+.Qq test
+exist,
+.Nm
+generates a tester script that can be invoked via
+.Ql ninja test .
+It will compile and run all Nim files in the
+.Pa tests
+directory beginning with
+.Qq t
+in their filename.
+.Pp
+This behavior is compatible with nimble.
+.
+.Ss Installing
+.Nm
+generates an installer script that can be invoked via
+.Ql ninja install .
+It installs both sources and binaries
+.Pq if any .
+.Pp
+If any of the
+.Va installDirs , installFiles , installExt
+variables are present in the
+.Pa .nimble
+file,
+.Nm
+operates in the whitelist mode.
+Please refer the to the nimble documentation for more information.
 .Sh ENVIRONMENT
 .Bl -tag -width DESTDIR
 .It Ev DESTDIR
@@ -84,6 +121,10 @@ Build file for a ninja-compatible build system.
 Script for installing packages.
 .It Pa nimblemeta.json
 Metadata file that contains package URL.
+.It Pa querytool.nims
+Script for extracting metadata from
+.Pa .nimble
+files.
 .It Pa tester.nims
 Script for running Nimble-style tests.
 .El
