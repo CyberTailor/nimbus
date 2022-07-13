@@ -8,9 +8,14 @@ nimbus
 would also be a clever name but it's already taken (turns out the name "nimbus"
 is taken two times already but nobody cares yet).
 
-[Read the manpage online][man]
+* [Read the manpage online][man]
+* Example use:
+    * [nimble.eclass][nimble.eclass]
+    * [dev-nim/\* ebuilds][dev-nim]
 
 [man]: https://docs.sysrq.in/nimbus
+[nimble.eclass]: https://gitweb.gentoo.org/repo/proj/guru.git/tree/eclass/nimble.eclass
+[dev-nim]: https://gitweb.gentoo.org/repo/proj/guru.git/tree/dev-nim
 
 
 Raison d'être
