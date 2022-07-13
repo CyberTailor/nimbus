@@ -14,6 +14,7 @@
 .Op Fl Fl nimbleDir : Ns Ar path
 .Op Fl Fl nim : Ns Ar path
 .Op Fl Fl url : Ns Ar url
+.Op Fl Fl useDepfile
 .Op nim opts...
 .Ar sourceDir
 .Op Ar buildDir
@@ -45,14 +46,18 @@ Set the executable directory, where project's binaries will be installed.
 .It Fl Fl debug
 Show debugging information.
 .
-.It Fl Fl nim : Ns Ar path
-Set the Nim executable.
-.
 .It Fl Fl nimbleDir : Ns Ar path
 Set the Nimble directory, where project's sources will be installed.
 .
+.It Fl Fl nim : Ns Ar path
+Set the Nim executable.
+.
 .It Fl Fl url : Ns Ar url
 If this options is set,
+.
+.It Fl Fl useDepfile
+Tell the Nim compiler to make a depfile.
+Only available with patched Nim.
 .Nm
 will generate and install a
 .Pa nimblemeta.json

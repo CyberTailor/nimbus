@@ -10,6 +10,7 @@ type
   Options* = object
     showHelp*: bool
     debug*: bool
+    useDepfile*: bool
     nimbleDir*: string
     binDir*: string
     nim*: string # Nim compiler location
@@ -22,8 +23,8 @@ type
 
 const
   help* = """
-Usage: nimbus [-h] [--debug] [--nimbleDir:path] [--binDir:path] [--nim:path]
-              [--url:url] [nim opts...] sourceDir [buildDir]
+Usage: nimbus [-h] [--debug] [--useDepfile] [--nimbleDir:path] [--binDir:path]
+              [--nim:path] [--url:url] [nim opts...] sourceDir [buildDir]
 
 positional arguments:
   sourceDir
@@ -32,6 +33,7 @@ positional arguments:
 optional arguments:
   -h, --help          show this help message and exit
   --debug             Show debugging information.
+  --useDepfile        Tell Nim compiler to make a depfile.
   --nimbleDir:path    Nimble directory (default: $1).
   --binDir:path       Executable directory (default: $2).
   --nim:path          Nim compiler (default: nim).
@@ -158,6 +160,7 @@ func parseFlag(flag, val: string, result: var Options, kind = cmdLongOption) =
   case f
   of "help", "h": result.showHelp = true
   of "debug": result.debug = true
+  of "usedepfile": result.useDepfile = true
   of "nimbledir": result.nimbleDir = val
   of "bindir": result.binDir = val
   of "nim": result.nim = val
@@ -177,6 +180,7 @@ proc parseCmdLine*(): Options =
   # set default values here
   result.debug = false
   result.showHelp = false
+  result.useDepfile = false
 
   var argc = 0
   for kind, key, val in getOpt():

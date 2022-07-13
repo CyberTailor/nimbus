@@ -6,7 +6,8 @@
 
 	* nimbleexecutor.nim (toJsonString): query variables in bulk
 
-	* nimbus.nim: add debug output
+	* nimbus.nim: support patched Nim compilers with --depfile option; add
+	debug output
 
 	* options.nim (initLogger): set default log level to NOTICE
 
