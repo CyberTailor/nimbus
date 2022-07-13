@@ -5,7 +5,8 @@ nimbus
 ======
 
 **nimbus** is a **Nim** **bu**ild **s**ystem. You can also call in NimBS. Nimja
-would also be a clever name but it's already taken.
+would also be a clever name but it's already taken (turns out the name "nimbus"
+is taken two times already but nobody cares yet).
 
 
 Raison d'être
@@ -24,8 +25,13 @@ Dependencies
 **nimbus** only generates `build.ninja` files, so you'll need [ninja][ninja]
 or [samurai][samurai] to use it.
 
+If you want depfile support (`--useDepfile` flag), build Nim with my
+[nim-patches][nim-patches].
+
 [ninja]: https://ninja-build.org/
 [samurai]: https://github.com/michaelforney/samurai
+
+[nim-patches]: https://git.sysrq.in/nim-patches/
 
 
 Installing
