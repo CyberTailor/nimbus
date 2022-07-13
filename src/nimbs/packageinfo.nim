@@ -53,6 +53,9 @@ proc initPackageInfo*(options: Options): PackageInfo =
   let nimbleFile = options.getSourceDir().findNimbleFile()
   result.nimbleFile = nimbleFile
 
+  var optionsRef = new Options
+  optionsRef[] = options
+
   var timeStart: float
   if options.debug:
     timeStart = epochTime()
@@ -60,17 +63,17 @@ proc initPackageInfo*(options: Options): PackageInfo =
 
   init(Weave)
   let
-    name         = spawn nimbleFile.queryString("packageName", options)
-    version      = spawn nimbleFile.queryString("version", options)
-    requires     = spawn nimbleFile.queryArray("requiresData", options)
-    bin          = spawn nimbleFile.queryArray("bin", options)
-    skipDirs     = spawn nimbleFile.queryArray("skipDirs", options)
-    skipFiles    = spawn nimbleFile.queryArray("skipFiles", options)
-    skipExt      = spawn nimbleFile.queryArray("skipExt", options)
-    installDirs  = spawn nimbleFile.queryArray("installDirs", options)
-    installFiles = spawn nimbleFile.queryArray("installFiles", options)
-    installExt   = spawn nimbleFile.queryArray("installExt", options)
-    srcDir       = spawn nimbleFile.queryString("srcDir", options)
+    name         = spawn nimbleFile.queryString("packageName", optionsRef)
+    version      = spawn nimbleFile.queryString("version", optionsRef)
+    requires     = spawn nimbleFile.queryArray("requiresData", optionsRef)
+    bin          = spawn nimbleFile.queryArray("bin", optionsRef)
+    skipDirs     = spawn nimbleFile.queryArray("skipDirs", optionsRef)
+    skipFiles    = spawn nimbleFile.queryArray("skipFiles", optionsRef)
+    skipExt      = spawn nimbleFile.queryArray("skipExt", optionsRef)
+    installDirs  = spawn nimbleFile.queryArray("installDirs", optionsRef)
+    installFiles = spawn nimbleFile.queryArray("installFiles", optionsRef)
+    installExt   = spawn nimbleFile.queryArray("installExt", optionsRef)
+    srcDir       = spawn nimbleFile.queryString("srcDir", optionsRef)
 
   syncRoot(Weave)
   exit(Weave)

@@ -20,6 +20,8 @@ type
     passNimFlags*: seq[string]
     cmdLine*: seq[string] # only flags, not arguments
 
+  OptionsRef* = ref Options
+
 const
   help* = """
 Usage: nimbus [-h] [--debug] [--nimbleDir:path] [--binDir:path] [--nim:path]

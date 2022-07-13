@@ -5,11 +5,12 @@ import std/[json, logging, os, osproc, sequtils, strformat, strutils, times]
 
 import options
 
+{.experimental: "implicitDeref".}
 
 type SeqString* = seq[string]
 
 proc query(nimbleFile, variable: string,
-           options: Options): string {.thread.} =
+           options: OptionsRef): string {.thread.} =
   ## Return a NimScript variable as a JSON object.
 
   proc debugFn(s: string) =
@@ -41,11 +42,11 @@ proc query(nimbleFile, variable: string,
     debugFn(fmt"Finished querying NimScript variable '{variable}' ({time:.2f} s)")
 
 proc queryString*(nimbleFile, variable: string,
-                  options: Options): string {.thread.} =
+                  options: OptionsRef): string {.thread.} =
   result = nimbleFile.query(variable, options).parseJson().getStr()
 
 proc queryArray*(nimbleFile, variable: string,
-                 options: Options): SeqString {.thread.} =
+                 options: OptionsRef): SeqString {.thread.} =
   result = nimbleFile.query(variable, options).parseJson().to(seq[string])
 
 proc getTasks*(nimsFile: string, options: Options): seq[string] =
