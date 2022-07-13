@@ -4,7 +4,7 @@
 import std/strutils
 
 const
-  nimbusVersion* = "0.2.5"
+  nimbusVersion* = "0.3.0"
 
   defaultBinDir* = "/usr/local/bin"
   defaultNimbleDir* = "/opt/nimble"

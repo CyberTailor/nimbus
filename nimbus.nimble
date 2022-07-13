@@ -3,9 +3,9 @@
 
 # Package
 
-version       = "0.2.5"
+version       = "0.3.0"
 author        = "Anna"
-description   = "A Nim build system."
+description   = "A Nim build system"
 license       = "BSD"
 
 bin = @["nimbus"]
