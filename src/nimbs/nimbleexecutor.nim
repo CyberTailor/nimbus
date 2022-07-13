@@ -34,8 +34,8 @@ proc query(nimbleFile, variable: string,
 
   var exitCode: int
   (result, exitCode) = execCmdEx(cmd)
-  if exitCode != QuitSuccess:
-    quit(fmt"Failed to get the value of `{variable}` from {nimbleFile}")
+  doAssert(exitCode == QuitSuccess,
+           fmt"Failed to get the value of `{variable}` from {nimbleFile}")
 
   if options.debug:
     let time = epochTime() - timeStart
