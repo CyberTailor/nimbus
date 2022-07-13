@@ -51,6 +51,8 @@ proc initLogger*(options: Options) =
   addHandler(options.logger)
   if options.debug:
     setLogFilter(lvlDebug)
+  else:
+    setLogFilter(lvlNotice)
 
 proc setLogger*(options: var Options) =
   options.logger = newConsoleLogger()
@@ -172,6 +174,10 @@ func parseArgument(key: string, argc: var int, result: var Options) =
   else: discard
 
 proc parseCmdLine*(): Options =
+  # set default values here
+  result.debug = false
+  result.showHelp = false
+
   var argc = 0
   for kind, key, val in getOpt():
     case kind

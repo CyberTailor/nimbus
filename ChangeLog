@@ -1,12 +1,14 @@
 2022-07-13  Anna  <cyber@sysrq.in>
 
-	* 0.3.0 tagged
+	* 0.3.0, 0.3.1 tagged
 
 	* nim.cfg: switch to --gc:orc, disable threads
 
 	* nimbleexecutor.nim (toJsonString): query variables in bulk
 
 	* nimbus.nim: add debug output
+
+	* options.nim (initLogger): set default log level to NOTICE
 
 2022-07-04  Anna  <cyber@sysrq.in>
 
