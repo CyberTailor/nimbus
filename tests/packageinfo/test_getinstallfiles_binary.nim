@@ -6,12 +6,15 @@ import nimbs/options, nimbs/packageinfo
 
 const sourceDir = "tests" / "packageinfo" / "binary"
 
-var opts = Options(sourceDir: sourceDir)
-opts.setNimBin
-
-let pkgInfo = initPackageInfo(opts)
-assert pkgInfo.name == "binary"
-assert pkgInfo.version == "1.0"
+let
+  opts = Options(sourceDir: sourceDir)
+  pkgInfo = PackageInfo(
+    nimbleFile: sourceDir / "binary.nimble",
+    name: "binary",
+    version: "1.0",
+    bin: @["tools/main"],
+    skipFiles: @["README.md"]
+  )
 
 let files = pkgInfo.getInstallFiles(opts).sorted
 assert files == @[

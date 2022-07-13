@@ -6,12 +6,14 @@ import nimbs/options, nimbs/packageinfo
 
 const sourceDir = "tests" / "packageinfo" / "source-whitelist"
 
-var opts = Options(sourceDir: sourceDir)
-opts.setNimBin
-
-let pkgInfo = initPackageInfo(opts)
-assert pkgInfo.name == "source-whitelist"
-assert pkgInfo.version == "1.0"
+let
+  opts = Options(sourceDir: sourceDir)
+  pkgInfo = PackageInfo(
+    nimbleFile: sourceDir / "source-whitelist.nimble",
+    name: "source-whitelist",
+    version: "1.0",
+    installExt: @["nim"]
+  )
 
 let files = pkgInfo.getInstallFiles(opts).sorted
 assert files == @[

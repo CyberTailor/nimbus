@@ -1,50 +1,40 @@
 # SPDX-FileCopyrightText: 2022 Anna <cyber@sysrq.in>
 # SPDX-License-Identifier: BSD-3-Clause
 
-import std/[json, logging, os, osproc, sequtils, strformat, strutils, times]
+import std/[json, os, osproc, sequtils, strformat, strutils]
 
-import options
+import common, options
 
-proc query(nimbleFile, variable: string, options: Options): string {.thread.} =
-  ## Return a NimScript variable as a JSON object.
+proc getSeq*(node: JsonNode): seq[string] =
+  ## Retrieves the `seq[string]` value of a `JArray JsonNode`.
+  return node.to(seq[string])
 
-  proc debugFn(s: string) =
-    debug("[query] " & s)
-    stdout.flushFile()
+proc toJsonString*(nimbleFile: string, options: Options): string =
+  ## Parse standard NimScript variables using a helper tool.
 
-  var timeStart: float
-  options.initLogger()
-  if options.debug:
-    timeStart = epochTime()
-    debugFn(fmt"Started querying NimScript variable '{variable}'")
+  let queryToolFile = options.getBuildDir() / queryToolFileName
+  if not fileExists(queryToolFile):
+    quit(fmt"{queryToolFileName} does not exist")
 
   let cmd = (
-    "$# $# --eval:'import json; include \"$#\"; echo %$#'" % [
+    "$# $# --eval:'include \"$#\"; include \"$#\"'" % [
       getNimBin(options).quoteShell,
       "--hints:off --verbosity:0",
       nimbleFile,
-      variable
+      queryToolFile
     ]
   ).strip()
 
   var exitCode: int
   (result, exitCode) = execCmdEx(cmd)
   if exitCode != QuitSuccess:
-    quit(fmt"Failed to get the value of `{variable}` from {nimbleFile}")
-
-  if options.debug:
-    let time = epochTime() - timeStart
-    debugFn(fmt"Finished querying NimScript variable '{variable}' ({time:.2f} s)")
-
-proc queryString*(nimbleFile, variable: string,
-                  options: Options): string {.thread.}=
-  result = nimbleFile.query(variable, options).parseJson().getStr()
-
-proc queryArray*(nimbleFile, variable: string,
-                 options: Options): seq[string] {.thread.} =
-  result = nimbleFile.query(variable, options).parseJson().to(seq[string])
+    stderr.write(&"Failed to parse {nimbleFile}\n")
+    stderr.write(result)
+    quit(QuitFailure)
 
 proc getTasks*(nimsFile: string, options: Options): seq[string] =
+  ## Parse NimScript tasks from `nim help` output.
+
   let cmd = (
     "$# $# help $#" % [
       getNimBin(options).quoteShell,

@@ -15,6 +15,21 @@ const
 
   installerFileName* = "installer.nims"
   testerFileName* = "tester.nims"
+  queryToolFileName* = "querytool.nims"
+
+  nimbleVariables* = [
+    "packageName",
+    "version",
+    "requiresData",
+    "bin",
+    "skipDirs",
+    "skipFiles",
+    "skipExt",
+    "installDirs",
+    "installFiles",
+    "installExt",
+    "srcDir"
+  ]
 
 func tripleQuoted*(s: string): string =
   return '"'.repeat(3) & s & '"'.repeat(3)

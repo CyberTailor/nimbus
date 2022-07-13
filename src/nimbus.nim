@@ -1,11 +1,11 @@
 # SPDX-FileCopyrightText: 2022 Anna <cyber@sysrq.in>
 # SPDX-License-Identifier: BSD-3-Clause
 
-import std/[os, sequtils, strtabs, strutils]
+import std/[logging, os, sequtils, strtabs, strutils]
 
 import nimbs/[common, dependencyresolver, installerscript, ninjasyntax,
               nimbleexecutor, options, packageinfo, packagemetadata,
-              testerscript, version]
+              querytoolscript, testerscript, version]
 
 proc processDependencies(requires: seq[string], options: Options): seq[string] =
   ## Checks package dependencies and returns list of paths for the Nim compiler,
@@ -54,6 +54,11 @@ proc setup(options: Options) =
 
   if options.getSourceDir() == options.getBuildDir():
     quit("In-source builds are not allowed")
+
+  debug("Writing query tool script")
+  let queryTool = open(options.getBuildDir() / queryToolFileName, fmWrite)
+  queryTool.writeQueryToolScript()
+  queryTool.close()
 
   let pkgInfo = initPackageInfo(options)
   echo "Project name: " & pkgInfo.name
