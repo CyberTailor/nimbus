@@ -1,3 +1,13 @@
+2022-07-13  Anna  <cyber@sysrq.in>
+
+	* 0.3.0 tagged
+
+	* nimbleexecutor.nim: use OptionsRef instead of Options. This is needed
+	to work with --gc:orc
+
+	* packageinfo.nim (initPackageInfo): use weave library for threading
+	instead of std/threadpool (will be removed in Nim 2.0)
+
 2022-07-04  Anna  <cyber@sysrq.in>
 
 	* 0.2.4, 0.2.5 tagged

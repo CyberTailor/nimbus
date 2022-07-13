@@ -24,8 +24,12 @@ Dependencies
 **nimbus** only generates `build.ninja` files, so you'll need [ninja][ninja]
 or [samurai][samurai] to use it.
 
+[weave][weave] is used for optional threading support.
+
 [ninja]: https://ninja-build.org/
 [samurai]: https://github.com/michaelforney/samurai
+
+[weave]: https://nimble.directory/pkg/weave
 
 
 Installing
@@ -38,6 +42,8 @@ Installing
 * Using just Nim compiler:
 
     `nim c src/nimbus`
+
+Add `-d:withWeave` flag to enable multi-threading.
 
 
 Testing
