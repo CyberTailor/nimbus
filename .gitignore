@@ -7,10 +7,12 @@
 !*.*
 !*/
 !ChangeLog
+!Makefile
 
 # Any path
 *.swp
 *~
+_build/
 build/
 nimcache/
 
