@@ -19,7 +19,8 @@ release = '1.0.0'
 
 extensions = [
     'notfound.extension',
-    'sphinx-prompt'
+    'sphinx-prompt',
+    'sphinx_sitemap'
 ]
 
 root_doc = 'toc'
@@ -34,3 +35,9 @@ html_theme = 'insipid'
 html_static_path = ['_static']
 html_title = f'{project} {release}'
 html_show_sourcelink = False
+html_baseurl = 'https://nimbus.sysrq.in/'
+
+sitemap_locales = [None]
+sitemap_url_scheme = '{link}'
+
+notfound_no_urls_prefix = True
