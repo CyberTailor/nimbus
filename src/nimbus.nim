@@ -156,7 +156,8 @@ proc setup(options: Options) =
                 "$depfileopt $paths $in",
       description = "Compiling Nim application $out",
       depfile = "$out.d",
-      deps = "gcc")
+      deps = "gcc",
+      pool = "console")
     ninja.newline()
 
   debug("[build.ninja] Generating 'PHONY' target")
