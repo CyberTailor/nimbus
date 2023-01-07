@@ -152,7 +152,7 @@ proc setup(options: Options) =
   if pkgInfo.bin.len != 0:
     debug("[build.ninja] Generating 'nimc' rule")
     ninja.rule("nimc",
-      command = "$nim --hints:off $nimflags c --nimcache:$nimcache -o:$out " &
+      command = "$nim $nimflags c --nimcache:$nimcache -o:$out " &
                 "$depfileopt $paths $in",
       description = "Compiling Nim application $out",
       depfile = "$out.d",
