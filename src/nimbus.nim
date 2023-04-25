@@ -21,22 +21,17 @@ proc processDependencies(requires: seq[string], options: Options): seq[string] =
     else:
       result.add(dep.getPath(options).quoteShell)
 
-proc application(ninja: File, input, output: string, paths: seq[string],
-                 useDepfile: bool) =
+proc application(ninja: File, input, output: string, paths: seq[string]) =
   debug(fmt"[build.ninja] Generating target for application '{output}'")
 
+  let depfile = quoteShell(output & ".d")
   var vars = newStringTable()
   if paths.len != 0:
     vars["paths"] = "-p:" & paths.join(" -p:")
-  if useDepfile:
-    let depfile = quoteShell(output & ".d")
-    vars["depfileopt"] = "--depfile:" & depfile
 
   ninja.build([output],
     rule = "nimc",
     inputs = [input],
-    implicit = if useDepfile: newSeq[string]()
-               else: @["PHONY"],
     variables = vars
   )
 
@@ -152,8 +147,7 @@ proc setup(options: Options) =
   if pkgInfo.bin.len != 0:
     debug("[build.ninja] Generating 'nimc' rule")
     ninja.rule("nimc",
-      command = "$nim $nimflags c --nimcache:$nimcache -o:$out " &
-                "$depfileopt $paths $in",
+      command = "$nim $nimflags c --nimcache:$nimcache -o:$out $paths $in",
       description = "Compiling Nim application $out",
       depfile = "$out.d",
       deps = "gcc",
@@ -184,7 +178,7 @@ proc setup(options: Options) =
   for bin in pkgInfo.bin:
     let output = bin.lastPathPart.addFileExt(ExeExt)
     let input = pkgInfo.getSourceDir(options) / bin.addFileExt("nim")
-    ninja.application(input, output, depPaths, options.useDepfile)
+    ninja.application(input, output, depPaths)
     ninja.newline()
 
   debug("[build.ninja] Generating 'all' target")

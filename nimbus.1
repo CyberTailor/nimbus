@@ -14,7 +14,6 @@
 .Op Fl Fl nimbleDir : Ns Ar path
 .Op Fl Fl nim : Ns Ar path
 .Op Fl Fl url : Ns Ar url
-.Op Fl Fl useDepfile
 .Op nim opts...
 .Ar sourceDir
 .Op Ar buildDir
@@ -61,10 +60,6 @@ file.
 Some packages specify their dependencies using URLs and
 .Nm
 is unable to find them unless such metadata file exists.
-.
-.It Fl Fl useDepfile
-Tell the Nim compiler to make a depfile.
-Only available with patched Nim.
 .El
 .Pp
 All unrecognized flags are passed to the Nim compiler.
