@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2022 Anna <cyber@sysrq.in>
+# SPDX-FileCopyrightText: 2022-2023 Anna <cyber@sysrq.in>
 # SPDX-License-Identifier: BSD-3-Clause
 
 discard """
@@ -10,12 +10,12 @@ import nimbs/options, nimbs/testerscript
 
 const outputExpected = """#!/usr/bin/env nim e
 
-import os, strformat, strutils
+import std/[os, strformat, strutils]
 
 const
-  nimBin = @/usr/bin/nim@
+  nimBin = @/usr/bin/nim@.quoteShell
   nimFlags = @-d:release --threads:on@
-  nimCacheDir = @'build dir/nimcache'@
+  nimCache = @build dir/nimcache@.quoteShell
 
 withDir(@tests/testerscript@):
   for test in listFiles("tests"):

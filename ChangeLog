@@ -2,6 +2,8 @@
 
 	* ninjasyntax.nim (build): don't escape args automatically
 
+	* nimbus.nim: use a custom build script
+
 2023-04-25  Anna  <cyber@sysrq.in>
 
 	* nimbus.nim: drop support for patched Nim compilers

@@ -2,7 +2,7 @@
 # SPDX-FileCopyrightText: 2023 Anna <cyber@sysrq.in>
 # SPDX-License-Identifier: BSD-3-Clause
 
-import std/[logging, os, parseopt, strutils]
+import std/[logging, os, parseopt, strformat, strutils]
 
 import common
 
@@ -21,7 +21,7 @@ type
     cmdLine*: seq[string] # only flags, not arguments
 
 const
-  help* = """
+  help* = fmt"""
 Usage: nimbus [-h] [--debug] [--nimbleDir:path] [--binDir:path] [--nim:path]
               [--url:url] [nim opts...] sourceDir [buildDir]
 
@@ -30,15 +30,15 @@ positional arguments:
   buildDir
 
 optional arguments:
-  -h, --help          show this help message and exit
+  -h, --help          Show this help message and exit.
   --debug             Show debugging information.
-  --nimbleDir:path    Nimble directory (default: $1).
-  --binDir:path       Executable directory (default: $2).
+  --nimbleDir:path    Nimble directory (default: {defaultNimbleDir}).
+  --binDir:path       Executable directory (default: {defaultBinDir}).
   --nim:path          Nim compiler (default: nim).
   --url:url           Package URL.
 
 Unrecognized flags are passed to the Nim compiler.
-""" % [defaultNimbleDir, defaultBinDir]
+""".strip()
 
 proc writeHelp*() =
   echo(help)

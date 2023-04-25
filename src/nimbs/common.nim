@@ -1,4 +1,5 @@
 # SPDX-FileCopyrightText: Copyright (C) Dominik Picheta. All rights reserved.
+# SPDX-FileCopyrightText: 2022-2023 Anna <cyber@sysrq.in>
 # SPDX-License-Identifier: BSD-3-Clause
 
 import std/strutils
@@ -13,6 +14,7 @@ const
   packageMetadataFileName* = "nimblemeta.json"
   nimCacheDirName* = "nimcache"
 
+  builderFileName* = "builder.nims"
   installerFileName* = "installer.nims"
   testerFileName* = "tester.nims"
   queryToolFileName* = "querytool.nims"
@@ -32,4 +34,5 @@ const
   ]
 
 func tripleQuoted*(s: string): string =
+  ## Applies """triple quotes""" to a string.
   return '"'.repeat(3) & s & '"'.repeat(3)

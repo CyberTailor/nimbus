@@ -1,11 +1,24 @@
-# SPDX-FileCopyrightText: 2022 Anna <cyber@sysrq.in>
+# SPDX-FileCopyrightText: 2022-2023 Anna <cyber@sysrq.in>
 # SPDX-License-Identifier: BSD-3-Clause
 
-import std/[logging, os, sequtils, strtabs, strformat, strutils]
+import std/strutils except escape
+import std/[logging, os, sequtils, strtabs, strformat]
 
-import nimbs/[common, dependencyresolver, installerscript, ninjasyntax,
-              nimbleexecutor, options, packageinfo, packagemetadata,
-              querytoolscript, testerscript, version]
+import nimbs/[common, options]
+import nimbs/[ninjasyntax]
+import nimbs/[
+  dependencyresolver,
+  nimbleexecutor,
+  packageinfo,
+  packagemetadata,
+  version
+]
+import nimbs/[
+  builderscript,
+  installerscript,
+  querytoolscript,
+  testerscript
+]
 
 proc processDependencies(requires: seq[string], options: Options): seq[string] =
   ## Checks package dependencies and returns list of paths for the Nim compiler,
@@ -21,17 +34,26 @@ proc processDependencies(requires: seq[string], options: Options): seq[string] =
     else:
       result.add(dep.getPath(options).quoteShell)
 
-proc application(ninja: File, input, output: string, paths: seq[string]) =
-  debug(fmt"[build.ninja] Generating target for application '{output}'")
+proc application(ninja: File, input, target: string, paths: seq[string]) =
+  debug(fmt"[build.ninja] Generating target for application '{target}'")
 
-  let depfile = quoteShell(output & ".d")
   var vars = newStringTable()
+  vars["target"] = "$builddir" / target.escape(body = true)
+  vars["sourcefile"] = input.escape(body = true)
   if paths.len != 0:
-    vars["paths"] = "-p:" & paths.join(" -p:")
+    vars["paths"] = escape("-p:" & paths.join(" -p:"), body = true)
 
-  ninja.build([output.escape],
-    rule = "nimc",
+  let jsonScript = "$nimcache" / target.addFileExt("json").escape
+  ninja.build([jsonScript],
+    rule = "genscript",
+    inputs = [input.escape, "$builder"],
+    variables = vars
+  )
+
+  ninja.build([target.addFileExt(ExeExt).escape],
+    rule = "jsonscript",
     inputs = [input.escape],
+    implicit = [jsonScript],
     variables = vars
   )
 
@@ -91,10 +113,11 @@ proc setup(options: Options) =
     nimblemeta.writeMetaData(options.url)
     nimblemeta.close()
 
-  echo "-- Generating installer script"
-  let installer = open(options.getBuildDir() / installerFileName, fmWrite)
-  installer.writeInstallerScript(pkgInfo, options)
-  installer.close()
+  if pkgInfo.bin.len != 0:
+    echo "-- Generating builder script"
+    let builder = open(options.getBuildDir() / builderFileName, fmWrite)
+    builder.writeBuilderScript(options)
+    builder.close()
 
   if "test" notin tasks and dirExists(options.getSourceDir() / "tests"):
     echo "-- Generating tester script"
@@ -102,6 +125,11 @@ proc setup(options: Options) =
     tester.writeTesterScript(options)
     tester.close()
     nimbleTests = true
+
+  echo "-- Generating installer script"
+  let installer = open(options.getBuildDir() / installerFileName, fmWrite)
+  installer.writeInstallerScript(pkgInfo, options)
+  installer.close()
 
   echo "-- Generating build.ninja"
   let ninja = open(options.getBuildDir() / "build.ninja", fmWrite)
@@ -114,10 +142,9 @@ proc setup(options: Options) =
   debug("[build.ninja] Writing variables")
   ninja.variable("nim", options.getNimBin().escape(body = true))
   ninja.variable("nimbus", getAppFilename().escape(body = true))
-  ninja.variable("nimflags", options.getNimFlags().escape(body = true))
-  ninja.variable("sourcedir", options.getSourceDir().escape(body = true))
   ninja.variable("nimcache", options.getNimCache().escape(body = true))
   ninja.variable("cmdline", options.getCmdLine().escape(body = true))
+  ninja.variable("builder", builderFileName.escape(body = true))
   ninja.newline()
 
   debug("[build.ninja] Generating 'REGENERATE_BUILD' rule")
@@ -135,22 +162,31 @@ proc setup(options: Options) =
     pool = "console")
   ninja.newline()
 
+  if pkgInfo.bin.len != 0:
+    debug("[build.ninja] Generating 'genscript' rule")
+    ninja.rule("genscript",
+      command = "$nim --hints:off e $builder -T:$target $paths $sourcefile",
+      description = "Generating build script for Nim application $out",
+      depfile = "$target".addFileExt("d"),
+      deps = "gcc",
+      pool = "console")
+    ninja.newline()
+
+    debug("[build.ninja] Generating 'jsonscript' rule")
+    ninja.rule("jsonscript",
+      command = "$nim jsonscript --nimcache:$nimcache -o:$out $sourcefile",
+      description = "Compiling Nim application $out",
+      depfile = "$target".addFileExt("d"),
+      deps = "gcc",
+      pool = "console")
+    ninja.newline()
+
   if tasks.len != 0:
     # most tasks are supposed to be run from the project root
     debug("[build.ninja] Generating 'nimbletask' rule")
     ninja.rule("nimbletask",
       command = "cd $sourcedir && $nim --hints:off $taskname $in",
       description = "Executing task $taskname",
-      pool = "console")
-    ninja.newline()
-
-  if pkgInfo.bin.len != 0:
-    debug("[build.ninja] Generating 'nimc' rule")
-    ninja.rule("nimc",
-      command = "$nim $nimflags c --nimcache:$nimcache -o:$out $paths $in",
-      description = "Compiling Nim application $out",
-      depfile = "$out.d",
-      deps = "gcc",
       pool = "console")
     ninja.newline()
 
@@ -176,9 +212,8 @@ proc setup(options: Options) =
   ninja.newline()
 
   for bin in pkgInfo.bin:
-    let output = bin.lastPathPart.addFileExt(ExeExt)
     let input = pkgInfo.getSourceDir(options) / bin.addFileExt("nim")
-    ninja.application(input, output, depPaths)
+    ninja.application(input, bin.lastPathPart, depPaths)
     ninja.newline()
 
   debug("[build.ninja] Generating 'all' target")
