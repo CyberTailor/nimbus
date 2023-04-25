@@ -8,7 +8,7 @@ author        = "Anna"
 description   = "A Nim build system"
 license       = "BSD"
 
-bin = @["nimbus"]
+bin = @["nimbus", "txt2deps"]
 srcDir = "src"
 installExt = @["nim"]
 

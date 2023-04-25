@@ -1,0 +1,47 @@
+.\" SPDX-FileType: DOCUMENTATION
+.\" SPDX-FileCopyrightText: 2023 Anna <cyber@sysrq.in>
+.\" SPDX-License-Identifier: BSD-3-Clause
+.Dd April 25, 2023
+.Dt TXT2DEPS 1
+.Os
+.Sh NAME
+.Nm txt2deps
+.Nd convert plain list of files to GCC-style depfiles
+.Sh SYNOPSIS
+.Nm
+.Fl T : Ns Ar path
+.Op Fl i : Ns Ar path
+.Op Fl o : Ns Ar path
+.Sh DESCRIPTION
+The
+.Nm
+utility takes a file with newline-separated list of filenames as input and outputs one
+.Xr make 1
+rule containing the target file name for that source file, a colon, and the names of all the included files.
+.Pp
+The arguments are as follows:
+.Bl -tag -width Ds
+.It Fl T : Ns Ar path
+Target file name.
+.
+.It Fl i : Ns Ar path
+Input file name.
+The default is the standard input.
+.
+.It Fl o : Ns Ar path
+Output file name.
+The default is the standard output.
+.El
+.
+.Sh EXIT STATUS
+.Ex -std
+.Sh EXAMPLES
+Generate a depfile:
+.Dl txt2deps -O test < ~/.cache/nim/test/test.deps > test.d
+.Sh SEE ALSO
+.Xr make 1 ,
+.Xr nimbus 1
+.Sh AUTHORS
+.An -split
+.An Anna
+.Aq Mt cyber@sysrq.in

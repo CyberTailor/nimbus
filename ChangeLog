@@ -1,3 +1,9 @@
+2023-04-25  Anna  <cyber@sysrq.in>
+
+	* nimbus.nim: drop support for patched Nim compilers
+
+	* txt2deps: new utility
+
 2022-07-13  Anna  <cyber@sysrq.in>
 
 	* 0.3.0, 0.3.1 tagged

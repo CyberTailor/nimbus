@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: Copyright (C) Dominik Picheta. All rights reserved.
-# SPDX-FileCopyrightText: 2022 Anna <cyber@sysrq.in>
+# SPDX-FileCopyrightText: 2023 Anna <cyber@sysrq.in>
 # SPDX-License-Identifier: BSD-3-Clause
 
 import std/[logging, os, parseopt, strutils]
@@ -13,7 +13,7 @@ type
     nimbleDir*: string
     binDir*: string
     nim*: string # Nim compiler location
-    url*: string 
+    url*: string
     sourceDir*: string
     buildDir*: string
     logger*: ConsoleLogger
