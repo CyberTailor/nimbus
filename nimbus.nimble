@@ -20,3 +20,7 @@ requires "nim >= 0.13.0"
 
 task test, "Test nimbus with Testament":
   exec("testament all")
+
+task clean, "Clean test files":
+  rmFile("outputGotten.txt")
+  rmDir("testresults")
