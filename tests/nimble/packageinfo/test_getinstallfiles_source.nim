@@ -1,10 +1,10 @@
-# SPDX-FileCopyrightText: 2022 Anna <cyber@sysrq.in>
+# SPDX-FileCopyrightText: 2022-2023 Anna <cyber@sysrq.in>
 # SPDX-License-Identifier: BSD-3-Clause
 
-import algorithm, os
-import nimbs/options, nimbs/packageinfo
+import std/[algorithm, os]
+import nimbs/[options, packageinfo]
 
-const sourceDir = "tests" / "packageinfo" / "source"
+const sourceDir = "tests" / "nimble" / "packageinfo" / "source"
 
 let
   opts = Options(sourceDir: sourceDir)

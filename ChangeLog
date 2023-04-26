@@ -4,6 +4,8 @@
 
 	* nimbus.nim: use a custom build script
 
+	* tests: refine directory structure
+
 2023-04-25  Anna  <cyber@sysrq.in>
 
 	* nimbus.nim: drop support for patched Nim compilers

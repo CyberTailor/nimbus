@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2022 Anna <cyber@sysrq.in>
+# SPDX-FileCopyrightText: 2022-2023 Anna <cyber@sysrq.in>
 # SPDX-License-Identifier: BSD-3-Clause
 
 discard """
@@ -11,11 +11,11 @@ discard """
 '''
 """
 
-import os, unittest
-import nimbs/dependencyresolver, nimbs/options, nimbs/version
+import std/[os, unittest]
+import nimbs/[dependencyresolver, options, version]
 
 const
-  nimbleDir = "tests" / "dependencyresolver" / "nimbleDir"
+  nimbleDir = "tests" / "nimble" / "dependencyresolver" / "nimbleDir"
   pkgsDir = nimbleDir / "pkgs2"
 
 let

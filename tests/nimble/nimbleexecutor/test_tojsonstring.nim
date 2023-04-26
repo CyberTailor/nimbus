@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2022 Anna <cyber@sysrq.in>
+# SPDX-FileCopyrightText: 2022-2023 Anna <cyber@sysrq.in>
 # SPDX-License-Identifier: BSD-3-Clause
 
 discard """
@@ -10,7 +10,7 @@ discard """
 import std/[os, tempfiles]
 import nimbs/[common, nimbleexecutor, options, querytoolscript]
 
-const nimbleFile = "tests" / "nimbleexecutor" / "nimble.nimble"
+const nimbleFile = "tests" / "nimble" / "nimbleexecutor" / "nimble.nimble"
 
 let tempDir = createTempDir("nimbustest_", "")
 let queryTool = open(tempDir / queryToolFileName, fmWrite)

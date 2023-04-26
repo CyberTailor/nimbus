@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2022 Anna <cyber@sysrq.in>
+# SPDX-FileCopyrightText: 2022-2023 Anna <cyber@sysrq.in>
 # SPDX-License-Identifier: BSD-3-Clause
 
 discard """
@@ -6,9 +6,9 @@ discard """
   outputsub: "Could not find a file with a .nimble extension inside the specified directory:"
 """
 
-import os
+import std/os
 import nimbs/packageinfo
 
-const dir = "tests" / "packageinfo" / "0nimble"
+const dir = "tests" / "nimble" / "packageinfo" / "0nimble"
 
 discard findNimbleFile(dir)

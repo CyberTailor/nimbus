@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2022 Anna <cyber@sysrq.in>
+# SPDX-FileCopyrightText: 2022-2023 Anna <cyber@sysrq.in>
 # SPDX-License-Identifier: BSD-3-Clause
 
 discard """
@@ -12,11 +12,11 @@ WARN [initPkgList] Skipped unsupported package: packageA-abc
 '''
 """
 
-import os
-import nimbs/dependencyresolver, nimbs/options, nimbs/version
+import std/os
+import nimbs/[dependencyresolver, options, version]
 
 const
-  nimbleDir = "tests" / "dependencyresolver" / "nimbleDir_unsupported"
+  nimbleDir = "tests" / "nimble" / "dependencyresolver" / "nimbleDir_unsupported"
   pkgsDir = nimbleDir / "pkgs2"
 
 let pkgA: PkgTuple = ("packageA", parseVersionRange(">= 0.1"))
