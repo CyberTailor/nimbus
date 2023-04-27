@@ -3,8 +3,6 @@ Upstream-Name: nimbus
 Upstream-Contact: Anna <cyber@sysrq.in>
 Source: https://nimbus.sysrq.in
 
-# Sample paragraph, commented out:
-#
-# Files: src/*
-# Copyright: $YEAR $NAME <$CONTACT>
-# License: ...
+Files: ChangeLog
+Copyright: Nimbus contributors
+License: CC0-1.0

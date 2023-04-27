@@ -34,18 +34,20 @@ proc processDependencies(requires: seq[string], options: Options): seq[string] =
     else:
       result.add(dep.getPath(options).quoteShell)
 
-proc application(ninja: File, input, target: string;
+proc application(ninja: File, input, targetName: string;
                  paths: seq[string], options: Options) =
-  debug(fmt"[build.ninja] Generating target for application '{target}'")
+  debug(fmt"[build.ninja] Generating target for application '{targetName}'")
 
   var vars = newStringTable()
-  vars["target"] = "$builddir" / target.escape(body = true)
+  vars["targetname"] = targetName
+  vars["target"] = "$builddir" / targetName.escape(body = true)
   vars["sourcefile"] = input.escape(body = true)
-  vars["nimcache"] = options.getNimCacheBaseDir() / target
+  vars["nimcache"] = escape(options.getNimCacheBaseDir() / targetName,
+                            body = true)
   if paths.len != 0:
     vars["paths"] = escape("-p:" & paths.join(" -p:"), body = true)
 
-  let jsonScript = "$nimcache" / target.addFileExt("json").escape
+  let jsonScript = "$nimcache" / targetName.addFileExt("json").escape
   ninja.build([jsonScript],
     rule = "genscript",
     inputs = [input.escape, "$builder"],
@@ -53,9 +55,9 @@ proc application(ninja: File, input, target: string;
   )
   ninja.newline()
 
-  ninja.build([target.addFileExt(ExeExt).escape],
+  ninja.build([vars["target"].addFileExt(ExeExt)],
     rule = "jsonscript",
-    inputs = [input.escape],
+    inputs = [input.escape, "$builder"],
     implicit = [jsonScript],
     variables = vars
   )
@@ -144,6 +146,7 @@ proc setup(options: Options) =
   ninja.newline()
 
   debug("[build.ninja] Writing variables")
+  ninja.variable("builddir", options.getBuildDir().escape(body = true))
   ninja.variable("nim", options.getNimBin().escape(body = true))
   ninja.variable("nimbus", getAppFilename().escape(body = true))
   ninja.variable("cmdline", options.getCmdLine().escape(body = true))
@@ -168,8 +171,9 @@ proc setup(options: Options) =
   if pkgInfo.bin.len != 0:
     debug("[build.ninja] Generating 'genscript' rule")
     ninja.rule("genscript",
-      command = "$nim --hints:off e $builder -T:$target $paths $sourcefile",
-      description = "Generating build script for Nim application $out",
+      command = "$nim --hints:off e $builder" &
+                " --genscript -T:$target $paths $sourcefile",
+      description = "Generating build script for Nim application $targetname",
       depfile = "$target".addFileExt("d"),
       deps = "gcc",
       pool = "console")
@@ -177,8 +181,9 @@ proc setup(options: Options) =
 
     debug("[build.ninja] Generating 'jsonscript' rule")
     ninja.rule("jsonscript",
-      command = "$nim jsonscript --nimcache:$nimcache -o:$out $sourcefile",
-      description = "Compiling Nim application $out",
+      command = "$nim --hints:off e $builder" &
+                " --jsonscript -T:$target $sourcefile",
+      description = "Compiling Nim application $targetname",
       depfile = "$target".addFileExt("d"),
       deps = "gcc",
       pool = "console")
@@ -216,13 +221,16 @@ proc setup(options: Options) =
 
   for bin in pkgInfo.bin:
     let input = pkgInfo.getSourceDir(options) / bin.addFileExt("nim")
-    let target = bin.lastPathPart
-    ninja.application(input, target, depPaths, options)
+    let targetName = bin.lastPathPart
+    ninja.application(input, targetName, depPaths, options)
 
   debug("[build.ninja] Generating 'all' target")
   ninja.build(["all"],
     rule = "phony",
-    inputs = pkgInfo.bin.mapIt(it.lastPathPart.addFileExt(ExeExt).escape))
+    inputs = pkgInfo.bin.mapIt(
+      "$builddir" / it.lastPathPart.addFileExt(ExeExt).escape
+    )
+  )
   ninja.default(["all"])
   ninja.newline()
 

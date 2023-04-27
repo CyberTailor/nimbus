@@ -22,48 +22,64 @@ const
 
 type
   Options = object
+    genScript: bool
     target: string
+    targetName: string
     inFile: string
     outFile: string
     paths: seq[string]
 
-proc build(options: Options) =
+proc genScript(options: Options) =
   var paths = ""
   if options.paths.len != 0:
     paths = "-p:" & options.paths.join(" -p:")
 
-  let targetName = options.target.extractFilename
-  let nimCache = nimCacheBaseDir / targetName
+  let nimCache = nimCacheBaseDir / options.targetName
   exec fmt"{nimBin} {nimFlags} c --genScript:on --nimcache:{nimCache.quoteShell}" &
        fmt" -o:{options.outFile.quoteShell} {paths} {options.inFile.quoteShell}"
 
   let txt2deps = findExe("txt2deps")
   if txt2deps.len != 0:
-    let nimDepsFile = nimCache / targetName.addFileExt("deps")
+    let nimDepsFile = nimCache / options.targetName.addFileExt("deps")
     let gccDepsFile = options.target.addFileExt("d")
     exec fmt"{txt2deps} -T:{options.target.quoteShell}" &
          fmt" -i:{nimDepsFile.quoteShell} -o:{gccDepsFile.quoteShell}"
 
+proc execScript(options: Options) =
+  let nimCache = nimCacheBaseDir / options.targetName
+  withDir nimCache:
+    exec fmt"{nimBin} {nimFlags} jsonscript --nimcache:{nimCache.quoteShell}" &
+         fmt" -o:{options.outFile.quoteShell} {options.inFile.quoteShell}"
+
 proc parseCmdLine(): Options =
+  result.genScript = true
   for kind, key, val in getOpt():
     case kind
     of cmdArgument:
       result.inFile = key
-    of cmdShortOption:
+    of cmdLongOption, cmdShortOption:
       case key.normalize()
       of "t":
         # full path!
         result.target = val
+        result.targetName = val.extractFilename
         result.outFile = val.addFileExt(ExeExt)
       of "p":
         result.paths.add(val)
+      of "genscript":
+        result.genScript = true
+      of "jsonscript":
+        result.genScript = false
       else:
         discard
-    of cmdEnd, cmdLongOption:
+    of cmdEnd:
       discard
 
 let opts = parseCmdLine()
-build(opts)
+if opts.genScript:
+  genScript(opts)
+else:
+  execScript(opts)
 """ % [options.getNimBin().tripleQuoted,
        options.getNimFlags().tripleQuoted,
        options.getNimCacheBaseDir().tripleQuoted])
