@@ -19,8 +19,8 @@ withDir($4):
   for test in listFiles("tests"):
     if test.startsWith("tests/t") and test.endsWith(".nim"):
       let nimCacheDir = nimCacheBaseDir / test.multiReplace(
-        ('/', '_'),
-        ('\\', '_')
+        ("/", "_"),
+        ("\\", "_")
       )
       echo "-- Running test ", test, "..."
       exec fmt"{nimBin} --hints:off {nimFlags} r" &
