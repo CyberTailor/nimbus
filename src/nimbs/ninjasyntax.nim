@@ -12,7 +12,7 @@ proc newline*(f: File) =
   f.write('\n')
 
 proc comment*(f: File, text: string) =
-  f.write("# " & text & '\n')
+  f.write(&"# {text}\n")
 
 proc line(f: File, text: string, indent = 0) =
   ## Write indented 'text', followed by a newline.
@@ -20,19 +20,22 @@ proc line(f: File, text: string, indent = 0) =
 
 proc variable*(f: File, key, value: string, indent = 0) =
   if key.len != 0 and value.len != 0:
-    f.line(&"{key} = {value}", indent)
+    f.line(fmt"{key} = {value}", indent)
 
 proc pool*(f: File, name, depth: string) =
   if name.len != 0 and depth.len != 0:
-    f.line(&"pool {name}")
+    f.line(fmt"pool {name}")
     f.variable("depth", depth, indent = 1)
 
-proc rule*(f: File, name, command: string; description, depfile, deps, pool,
-           rspfile, rspfileContent = ""; generator, restat = false) =
+proc rule*(
+    f: File, name, command: string;
+    description, depfile, deps, pool, rspfile, rspfileContent = "";
+    generator, restat = false
+  ) =
   if name.len == 0 or command.len == 0:
     return
 
-  f.line(&"rule {name}")
+  f.line(fmt"rule {name}")
   f.variable("command", command, indent = 1)
   if description.len != 0:
       f.variable("description", description, indent = 1)
@@ -51,13 +54,11 @@ proc rule*(f: File, name, command: string; description, depfile, deps, pool,
   if restat:
       f.variable("restat", "1", indent = 1)
 
-func escapePaths(paths: var openArray[string]) =
-  for i in 0..high(paths):
-    paths[i] = paths[i].replace("$", "$$").replace(" ", "$ ").replace(":", "$:")
-
-proc build*(f: File, outputs: openArray[string], rule: string; inputs, implicit,
-            orderOnly, implicitOutputs: openArray[string] = [];
-            variables: StringTableRef = nil; pool, dyndep = "") =
+proc build*(
+    f: File, outputs: openArray[string], rule: string;
+    inputs, implicit, orderOnly, implicitOutputs: openArray[string] = [];
+    variables: StringTableRef = nil; pool, dyndep = ""
+  ) =
   # note: filterIt converts openArray[string] to seq[string]
   var outputs = outputs.filterIt(it != "")
   if outputs.len == 0 or rule.len == 0:
@@ -68,29 +69,23 @@ proc build*(f: File, outputs: openArray[string], rule: string; inputs, implicit,
   var orderOnly = orderOnly.filterIt(it.len != 0)
   var implicitOutputs = implicitOutputs.filterIt(it.len != 0)
 
-  escapePaths outputs
-  escapePaths inputs
-
   if implicit.len != 0:
-      escapePaths implicit
       inputs.add("|")
       inputs.add(implicit)
   if orderOnly.len != 0:
-      escapePaths orderOnly
       inputs.add("||")
       inputs.add(orderOnly)
   if implicitOutputs.len != 0:
-      escapePaths implicitOutputs
       outputs.add("|")
       outputs.add(implicitOutputs)
 
   let outputsStr = join(outputs, " ")
   let inputsStr = join(@[rule] & inputs, " ")
-  f.line(&"build {outputsStr}: {inputsStr}")
+  f.line(fmt"build {outputsStr}: {inputsStr}")
   if pool.len != 0:
-      f.line(&"pool = {pool}", indent = 1)
+      f.line(fmt"pool = {pool}", indent = 1)
   if dyndep.len != 0:
-      f.line(&"dyndep = {dyndep}", indent = 1)
+      f.line(fmt"dyndep = {dyndep}", indent = 1)
 
   if variables != nil:
       for key, val in variables.pairs:
@@ -98,21 +93,27 @@ proc build*(f: File, outputs: openArray[string], rule: string; inputs, implicit,
 
 proc `include`*(f: File, path: string) =
   if path.len != 0:
-    f.line(&"include {path}")
+    f.line(fmt"include {path}")
 
 proc subninja*(f: File, path: string) =
   if path.len != 0:
-    f.line(&"subninja {path}")
+    f.line(fmt"subninja {path}")
 
-proc default*(f: File, paths: openArray[string]) =
-  var paths = paths.filterIt(it.len != 0)
-  if paths.len != 0:
-    f.line("default " & paths.join(" "))
+proc default*(f: File, targets: openArray[string]) =
+  var targets = targets.filterIt(it.len != 0)
+  if targets.len != 0:
+    f.line("default " & targets.join(" "))
 
 
-func escape*(s: string): string =
+func escape*(s: string, body = false): string =
   ## Escape a string such that it can be embedded into a Ninja file without
   ## further interpretation.
   assert not s.contains("\n"), "Ninja syntax does not allow newlines"
-  # We only have one special metacharacter: "$".
-  return s.replace("$", "$$")
+  if body:
+    return s.replace("$", "$$")
+  else:
+    return s.multiReplace(
+      ("$", "$$"),
+      (" ", "$ "),
+      (":", "$:")
+    )

@@ -29,9 +29,9 @@ proc application(ninja: File, input, output: string, paths: seq[string]) =
   if paths.len != 0:
     vars["paths"] = "-p:" & paths.join(" -p:")
 
-  ninja.build([output],
+  ninja.build([output.escape],
     rule = "nimc",
-    inputs = [input],
+    inputs = [input.escape],
     variables = vars
   )
 
@@ -41,9 +41,9 @@ proc task(ninja: File, nimsFile, taskName: string) =
   var vars = newStringTable()
   vars["taskname"] = taskName
 
-  ninja.build([taskName],
+  ninja.build([taskName.escape],
     rule = "nimbletask",
-    inputs = [nimsFile],
+    inputs = [nimsFile.escape],
     implicit = ["PHONY"],
     variables = vars
   )
@@ -112,12 +112,12 @@ proc setup(options: Options) =
   ninja.newline()
 
   debug("[build.ninja] Writing variables")
-  ninja.variable("nim", options.getNimBin())
-  ninja.variable("nimbus", getAppFilename())
-  ninja.variable("nimflags", options.getNimFlags())
-  ninja.variable("sourcedir", options.getSourceDir())
-  ninja.variable("nimcache", options.getNimCache())
-  ninja.variable("cmdline", options.getCmdLine())
+  ninja.variable("nim", options.getNimBin().escape(body = true))
+  ninja.variable("nimbus", getAppFilename().escape(body = true))
+  ninja.variable("nimflags", options.getNimFlags().escape(body = true))
+  ninja.variable("sourcedir", options.getSourceDir().escape(body = true))
+  ninja.variable("nimcache", options.getNimCache().escape(body = true))
+  ninja.variable("cmdline", options.getCmdLine().escape(body = true))
   ninja.newline()
 
   debug("[build.ninja] Generating 'REGENERATE_BUILD' rule")
@@ -166,7 +166,7 @@ proc setup(options: Options) =
   debug("[build.ninja] Generating 'build.ninja' target")
   ninja.build(["build.ninja"],
     rule = "REGENERATE_BUILD",
-    inputs = [pkgInfo.nimbleFile])
+    inputs = [pkgInfo.nimbleFile.escape])
   ninja.newline()
 
   debug("[build.ninja] Generating 'reconfigure' target")
@@ -184,7 +184,7 @@ proc setup(options: Options) =
   debug("[build.ninja] Generating 'all' target")
   ninja.build(["all"],
     rule = "phony",
-    inputs = pkgInfo.bin.mapIt(it.lastPathPart.addFileExt(ExeExt)))
+    inputs = pkgInfo.bin.mapIt(it.lastPathPart.addFileExt(ExeExt).escape))
   ninja.default(["all"])
   ninja.newline()
 
@@ -192,14 +192,14 @@ proc setup(options: Options) =
     debug("[build.ninja] Generating 'test' target")
     ninja.build(["test"],
       rule = "nimscript",
-      inputs = [testerFileName],
+      inputs = [testerFileName.escape(body = true)],
       implicit = ["PHONY", "all"])
     ninja.newline()
 
   debug("[build.ninja] Generating 'install' target")
   ninja.build(["install"],
     rule = "nimscript",
-    inputs = [installerFileName],
+    inputs = [installerFileName.escape(body = true)],
     implicit = ["PHONY", "all"])
   ninja.close()
 

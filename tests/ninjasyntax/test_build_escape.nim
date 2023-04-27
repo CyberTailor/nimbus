@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2022 Anna <cyber@sysrq.in>
+# SPDX-FileCopyrightText: 2022-2023 Anna <cyber@sysrq.in>
 # SPDX-License-Identifier: BSD-3-Clause
 
 discard """
@@ -11,7 +11,7 @@ build main$$$ program: nimc
 
 import nimbs/ninjasyntax
 
-stdout.build(@["main program"], "nimc")
-stdout.build(@["main:program"], "nimc")
-stdout.build(@["main$"], "nimc")
-stdout.build(@["main$ program"], "nimc")
+stdout.build(["main program".escape], "nimc")
+stdout.build(["main:program".escape], "nimc")
+stdout.build(["main$".escape], "nimc")
+stdout.build(["main$ program".escape], "nimc")
