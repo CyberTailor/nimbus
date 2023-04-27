@@ -13,6 +13,7 @@
 .Op Fl Fl binDir : Ns Ar path
 .Op Fl Fl nimbleDir : Ns Ar path
 .Op Fl Fl nim : Ns Ar path
+.Op Fl Fl nimcache : Ns Ar path
 .Op Fl Fl url : Ns Ar url
 .Op nim opts...
 .Ar sourceDir
@@ -50,6 +51,10 @@ Set the Nimble directory, where project's sources will be installed.
 .
 .It Fl Fl nim : Ns Ar path
 Set the Nim executable.
+.
+.It Fl Fl nimcache : Ns Ar path
+Set the Nim cache base directory.
+Caches for individual targets will be created there.
 .
 .It Fl Fl url : Ns Ar url
 If this options is set,

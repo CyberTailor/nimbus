@@ -18,7 +18,7 @@ mode = Verbose
 const
   nimBin = $1.quoteShell
   nimFlags = $2
-  nimCache = $3
+  nimCacheBaseDir = $3
 
 type
   Options = object
@@ -32,12 +32,14 @@ proc build(options: Options) =
   if options.paths.len != 0:
     paths = "-p:" & options.paths.join(" -p:")
 
+  let targetName = options.target.extractFilename
+  let nimCache = nimCacheBaseDir / targetName
   exec fmt"{nimBin} {nimFlags} c --genScript:on --nimcache:{nimCache.quoteShell}" &
        fmt" -o:{options.outFile.quoteShell} {paths} {options.inFile.quoteShell}"
 
   let txt2deps = findExe("txt2deps")
   if txt2deps.len != 0:
-    let nimDepsFile = nimCache / options.target.addFileExt("deps")
+    let nimDepsFile = nimCache / targetName.addFileExt("deps")
     let gccDepsFile = options.target.addFileExt("d")
     exec fmt"{txt2deps} -T:{options.target.quoteShell}" &
          fmt" -i:{nimDepsFile.quoteShell} -o:{gccDepsFile.quoteShell}"
@@ -50,6 +52,7 @@ proc parseCmdLine(): Options =
     of cmdShortOption:
       case key.normalize()
       of "t":
+        # full path!
         result.target = val
         result.outFile = val.addFileExt(ExeExt)
       of "p":
@@ -63,4 +66,4 @@ let opts = parseCmdLine()
 build(opts)
 """ % [options.getNimBin().tripleQuoted,
        options.getNimFlags().tripleQuoted,
-       options.getNimCache().tripleQuoted])
+       options.getNimCacheBaseDir().tripleQuoted])

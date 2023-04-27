@@ -17,7 +17,7 @@ mode = Verbose
 const
   nimBin = @/usr/bin/nim@.quoteShell
   nimFlags = @-d:release --threads:on@
-  nimCache = @build dir/nimcache@
+  nimCacheBaseDir = @build dir/nimcache@
 """.replace("@", '"'.repeat(3))
 
 let opts = Options(buildDir: "build dir",

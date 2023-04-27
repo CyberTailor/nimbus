@@ -15,7 +15,7 @@ import std/[os, strformat, strutils]
 const
   nimBin = @/usr/bin/nim@.quoteShell
   nimFlags = @-d:release --threads:on@
-  nimCache = @build dir/nimcache@.quoteShell
+  nimCacheBaseDir = @build dir/nimcache@
 
 withDir(@tests/testerscript@):
 """.replace("@", '"'.repeat(3))

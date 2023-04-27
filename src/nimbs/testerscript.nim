@@ -13,14 +13,19 @@ import std/[os, strformat, strutils]
 const
   nimBin = $1.quoteShell
   nimFlags = $2
-  nimCache = $3.quoteShell
+  nimCacheBaseDir = $3
 
 withDir($4):
   for test in listFiles("tests"):
     if test.startsWith("tests/t") and test.endsWith(".nim"):
+      let nimCacheDir = nimCacheBaseDir / test.multiReplace(
+        ('/', '_'),
+        ('\\', '_')
+      )
       echo "-- Running test ", test, "..."
-      exec(fmt"{nimBin} --hints:off {nimFlags} r --nimcache:{nimCacheDir} {test.quoteShell}")
+      exec fmt"{nimBin} --hints:off {nimFlags} r" &
+           fmt" --nimcache:{nimCacheDir.quoteShell} {test.quoteShell}"
 """ % [options.getNimBin().tripleQuoted,
        options.getNimFlags().tripleQuoted,
-       options.getNimCache().tripleQuoted,
+       options.getNimCacheBaseDir().tripleQuoted,
        options.getSourceDir().tripleQuoted])

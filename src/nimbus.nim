@@ -34,12 +34,14 @@ proc processDependencies(requires: seq[string], options: Options): seq[string] =
     else:
       result.add(dep.getPath(options).quoteShell)
 
-proc application(ninja: File, input, target: string, paths: seq[string]) =
+proc application(ninja: File, input, target: string;
+                 paths: seq[string], options: Options) =
   debug(fmt"[build.ninja] Generating target for application '{target}'")
 
   var vars = newStringTable()
   vars["target"] = "$builddir" / target.escape(body = true)
   vars["sourcefile"] = input.escape(body = true)
+  vars["nimcache"] = options.getNimCacheBaseDir() / target
   if paths.len != 0:
     vars["paths"] = escape("-p:" & paths.join(" -p:"), body = true)
 
@@ -49,6 +51,7 @@ proc application(ninja: File, input, target: string, paths: seq[string]) =
     inputs = [input.escape, "$builder"],
     variables = vars
   )
+  ninja.newline()
 
   ninja.build([target.addFileExt(ExeExt).escape],
     rule = "jsonscript",
@@ -56,6 +59,7 @@ proc application(ninja: File, input, target: string, paths: seq[string]) =
     implicit = [jsonScript],
     variables = vars
   )
+  ninja.newline()
 
 proc task(ninja: File, nimsFile, taskName: string) =
   debug(fmt"[build.ninja] Generating target for task '{taskName}'")
@@ -142,7 +146,6 @@ proc setup(options: Options) =
   debug("[build.ninja] Writing variables")
   ninja.variable("nim", options.getNimBin().escape(body = true))
   ninja.variable("nimbus", getAppFilename().escape(body = true))
-  ninja.variable("nimcache", options.getNimCache().escape(body = true))
   ninja.variable("cmdline", options.getCmdLine().escape(body = true))
   ninja.variable("builder", builderFileName.escape(body = true))
   ninja.newline()
@@ -213,8 +216,8 @@ proc setup(options: Options) =
 
   for bin in pkgInfo.bin:
     let input = pkgInfo.getSourceDir(options) / bin.addFileExt("nim")
-    ninja.application(input, bin.lastPathPart, depPaths)
-    ninja.newline()
+    let target = bin.lastPathPart
+    ninja.application(input, target, depPaths, options)
 
   debug("[build.ninja] Generating 'all' target")
   ninja.build(["all"],

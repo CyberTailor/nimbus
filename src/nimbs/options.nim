@@ -17,13 +17,14 @@ type
     sourceDir*: string
     buildDir*: string
     logger*: ConsoleLogger
+    nimCacheBaseDir*: string
     passNimFlags*: seq[string]
     cmdLine*: seq[string] # only flags, not arguments
 
 const
   help* = fmt"""
 Usage: nimbus [-h] [--debug] [--nimbleDir:path] [--binDir:path] [--nim:path]
-              [--url:url] [nim opts...] sourceDir [buildDir]
+              [--nimcache:path] [--url:url] [nim opts...] sourceDir [buildDir]
 
 positional arguments:
   sourceDir
@@ -35,6 +36,7 @@ optional arguments:
   --nimbleDir:path    Nimble directory (default: {defaultNimbleDir}).
   --binDir:path       Executable directory (default: {defaultBinDir}).
   --nim:path          Nim compiler (default: nim).
+  --nimcache:path     Base directory for Nim cache (default: {nimCacheDirName}).
   --url:url           Package URL.
 
 Unrecognized flags are passed to the Nim compiler.
@@ -61,8 +63,11 @@ proc setLogger*(options: var Options) =
 func getBuildDir*(options: Options): string =
   return options.buildDir
 
-func getNimCache*(options: Options): string =
-  return options.getBuildDir() / nimCacheDirName
+func getNimCacheBaseDir*(options: Options): string =
+  if options.nimCacheBaseDir.len == 0:
+    return options.getBuildDir() / nimCacheDirName
+  else:
+    return options.nimCacheBaseDir
 
 proc setBuildDir*(options: var Options) =
   if options.buildDir.len != 0:
@@ -163,6 +168,7 @@ func parseFlag(flag, val: string, result: var Options, kind = cmdLongOption) =
   of "bindir": result.binDir = val
   of "nim": result.nim = val
   of "url": result.url = val
+  of "nimcache": result.nimCacheBaseDir = val
   else: result.passNimFlags.add(flagString)
 
   result.cmdline.add(flagString)
