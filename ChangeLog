@@ -1,5 +1,7 @@
 2023-04-27  Anna  <cyber@sysrq.in>
 
+	* 1.1.0 tagged
+
 	* ninjasyntax.nim (build): don't escape args automatically
 
 	* nimbus.nim: use a custom build script
