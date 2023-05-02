@@ -34,13 +34,8 @@ Dependencies
 **nimbus** only generates `build.ninja` files, so you'll need [ninja][ninja]
 or [samurai][samurai] to use it.
 
-If you want depfile support (`--useDepfile` flag), build Nim with my
-[nim-patches][nim-patches].
-
 [ninja]: https://ninja-build.org/
 [samurai]: https://github.com/michaelforney/samurai
-
-[nim-patches]: https://git.sysrq.in/nim-patches/
 
 
 Installing
@@ -52,7 +47,10 @@ Installing
 
 * Using just Nim compiler:
 
-    `nim c src/nimbus`
+    ```sh
+    nim c src/nimbus
+    nim c src/txt2deps
+    ```
 
 
 Testing
