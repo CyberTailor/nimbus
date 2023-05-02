@@ -18,10 +18,7 @@ const
 withDir($4):
   for test in listFiles("tests"):
     if test.startsWith("tests/t") and test.endsWith(".nim"):
-      let nimCacheDir = nimCacheBaseDir / test.multiReplace(
-        ("/", "_"),
-        ("\\", "_")
-      )
+      let nimCacheDir = nimCacheBaseDir / test.changeFileExt("")
       echo "-- Running test ", test, "..."
       exec fmt"{nimBin} --hints:off {nimFlags} r" &
            fmt" --nimcache:{nimCacheDir.quoteShell} {test.quoteShell}"

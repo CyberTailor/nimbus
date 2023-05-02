@@ -1,3 +1,7 @@
+2023-05-02  Anna  <cyber@sysrq.in>
+
+	* testerscript.nim: change nim cache directory for tests
+
 2023-04-27  Anna  <cyber@sysrq.in>
 
 	* 1.1.0, 1.1.1 tagged
