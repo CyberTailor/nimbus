@@ -4,6 +4,8 @@
 nimbus
 ======
 
+[![Build Status](https://drone.tildegit.org/api/badges/CyberTaIlor/nimbus/status.svg)](https://drone.tildegit.org/CyberTaIlor/nimbus)
+
 **nimbus** is a **Nim** **bu**ild **s**ystem. You can also call in NimBS. Nimja
 would also be a clever name but it's already taken (turns out the name "nimbus"
 is taken two times already but nobody cares yet).
