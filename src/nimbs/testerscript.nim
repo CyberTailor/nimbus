@@ -20,7 +20,7 @@ withDir($4):
     if test.startsWith("tests/t") and test.endsWith(".nim"):
       let nimCacheDir = nimCacheBaseDir / test.changeFileExt("")
       echo "-- Running test ", test, "..."
-      exec fmt"{nimBin} --hints:off {nimFlags} r" &
+      exec fmt"{nimBin} --hint:all:off --warning:all:off {nimFlags} r" &
            fmt" --nimcache:{nimCacheDir.quoteShell} {test.quoteShell}"
 """ % [options.getNimBin().tripleQuoted,
        options.getNimFlags().tripleQuoted,

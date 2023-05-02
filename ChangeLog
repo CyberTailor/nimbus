@@ -2,6 +2,8 @@
 
 	* testerscript.nim: change nim cache directory for tests
 
+	* testerscript.nim: disable warnings
+
 2023-04-27  Anna  <cyber@sysrq.in>
 
 	* 1.1.0, 1.1.1 tagged
