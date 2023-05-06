@@ -18,10 +18,25 @@ release = '1.1.1'
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
-    'notfound.extension',
     'sphinx-prompt',
-    'sphinx_sitemap'
 ]
+
+try:
+    import notfound.extension
+    extensions.append('notfound.extension')
+
+    notfound_no_urls_prefix = True
+except ModuleNotFoundError:
+    pass
+
+try:
+    import sphinx_sitemap
+    extensions.append('sphinx_sitemap')
+
+    sitemap_locales = [None]
+    sitemap_url_scheme = '{link}'
+except ModuleNotFoundError:
+    pass
 
 root_doc = 'toc'
 templates_path = ['_templates']
@@ -36,8 +51,3 @@ html_static_path = ['_static']
 html_title = f'{project} {release}'
 html_show_sourcelink = False
 html_baseurl = 'https://nimbus.sysrq.in/'
-
-sitemap_locales = [None]
-sitemap_url_scheme = '{link}'
-
-notfound_no_urls_prefix = True
