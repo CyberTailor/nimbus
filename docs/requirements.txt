@@ -1,0 +1,4 @@
+insipid-sphinx-theme
+sphinx-notfound-page
+sphinx-prompt
+sphinx-sitemap

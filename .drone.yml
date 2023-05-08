@@ -1,3 +1,4 @@
+---
 kind: pipeline
 type: docker
 name: default
@@ -7,3 +8,9 @@ steps:
     image: nimlang/nim:alpine
     commands:
       - testament --megatest:off all
+
+  - name: sphinx-doc
+    image: sphinxdoc/sphinx:latest
+    commands:
+      - pip install -r docs/requirements.txt
+      - sphinx-build docs docs/_build
