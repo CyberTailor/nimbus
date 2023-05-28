@@ -2,6 +2,8 @@
 
 	* Add $sourcedir ninja variable (deleted by mistake)
 
+	* 1.1.2 tagged
+
 2023-05-02  Anna  <cyber@sysrq.in>
 
 	* testerscript.nim: change nim cache directory for tests
