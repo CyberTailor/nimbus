@@ -146,6 +146,7 @@ proc setup(options: Options) =
   ninja.newline()
 
   debug("[build.ninja] Writing variables")
+  ninja.variable("sourcedir", options.getSourceDir().escape(body = true))
   ninja.variable("builddir", options.getBuildDir().escape(body = true))
   ninja.variable("nim", options.getNimBin().escape(body = true))
   ninja.variable("nimbus", getAppFilename().escape(body = true))

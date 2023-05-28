@@ -1,3 +1,7 @@
+2023-05-28  Anna  <cyber@sysrq.in>
+
+	* Add $sourcedir ninja variable (deleted by mistake)
+
 2023-05-02  Anna  <cyber@sysrq.in>
 
 	* testerscript.nim: change nim cache directory for tests
