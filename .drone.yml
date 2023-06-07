@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2022-2023 Anna <cyber@sysrq.in>
+# SPDX-FileCopyrightText: 2023 Anna <cyber@sysrq.in>
 # SPDX-License-Identifier: BSD-3-Clause
 
 kind: pipeline
@@ -11,8 +11,24 @@ steps:
     commands:
       - testament --megatest:off all
 
-  - name: sphinx-doc
+---
+kind: pipeline
+type: docker
+name: sphinx-doc
+steps:
+  - name: build
     image: sphinxdoc/sphinx:latest
     commands:
       - pip install -r docs/requirements.txt
       - sphinx-build docs docs/_build
+
+---
+kind: pipeline
+type: docker
+name: reuse-lint
+
+steps:
+  - name: lint
+    image: fsfe/reuse:latest
+    commands:
+      - reuse lint
