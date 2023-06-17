@@ -1,3 +1,9 @@
+2023-06-17  Anna  <cyber@sysrq.in>
+
+	* man/txt2deps.1: fix filename
+
+	* 1.1.3 tagged
+
 2023-05-28  Anna  <cyber@sysrq.in>
 
 	* Add $sourcedir ninja variable (deleted by mistake)
