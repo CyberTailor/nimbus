@@ -100,7 +100,7 @@ You can join the `#nimbus` channel either on [OFTC][oftc] or
 [via Matrix][matrix].
 
 [oftc]: https://www.oftc.net/
-[matrix]: https://matrix.to/#/#nimbus:matrix.org
+[matrix]: https://matrix.to/#/#nimbus:sysrq.in
 
 
 License

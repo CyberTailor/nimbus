@@ -21,10 +21,10 @@ If you want to learn about how to use nimbus, check out the following resources:
 If you need help, or want to talk to the developers, use our chat rooms:
 
 * IRC: `#nimbus`_ at ``irc.oftc.net``
-* Matrix: `#nimbus:matrix.org`_
+* Matrix: `#nimbus:sysrq.in`_
 
 .. _#nimbus: https://kiwiirc.com/nextclient/#ircs://irc.oftc.net:+6697/nimbus
-.. _#nimbus\:matrix.org: https://matrix.to/#/#nimbus:matrix.org
+.. _#nimbus\:matrix.org: https://matrix.to/#/#nimbus:sysrq.in
 
 If you find any bugs, please report them on `Bugzilla`_.
 
