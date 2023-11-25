@@ -37,16 +37,17 @@ Other distributions
 Manual installation
 -------------------
 
-Using Nim:
+Using Nimble:
+
+.. prompt:: bash
+
+   nimble install https://git.sysrq.in/nimbus
+
+Using Nim (expert):
 
 .. prompt:: bash
 
    git clone https://git.sysrq.in/nimbus
    cd nimbus
    nim c src/nimbus
-
-Using Nimble:
-
-.. prompt:: bash
-
-   nimble install https://git.sysrq.in/nimbus
+   nim c src/txt2deps

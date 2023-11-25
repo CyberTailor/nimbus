@@ -47,7 +47,7 @@ Installing
 
     `nimble install`
 
-* Using just Nim compiler:
+* Using just Nim compiler (expert):
 
     ```sh
     nim c src/nimbus
