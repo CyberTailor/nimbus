@@ -2,8 +2,8 @@
 ..
 .. SPDX-License-Identifier: BSD-3-Clause
 
-nimbus
-======
+Introduction
+============
 
 nimbus is a build system for `Nim`_. It is compatible with the `Nimble`_ package
 format, so you can use it to build and install packages from the `Nimble

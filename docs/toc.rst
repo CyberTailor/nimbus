@@ -6,12 +6,21 @@ Table of Contents
 =================
 
 .. toctree::
+   :caption: Home
 
    index
+
+.. toctree::
+   :caption: Documentation
+
    installation
    getting-started
    contributing
 
+.. toctree::
+   :caption: External Links
+
+   Version History <https://git.sysrq.in/nimbus/plain/ChangeLog>
    Git Repository <https://git.sysrq.in/nimbus/>
 
 Indices and tables
