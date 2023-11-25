@@ -1,4 +1,4 @@
-.. SPDX-FileCopyrightText: 2022 Anna <cyber@sysrq.in>
+.. SPDX-FileCopyrightText: 2022-2023 Anna <cyber@sysrq.in>
 ..
 .. SPDX-License-Identifier: BSD-3-Clause
 
@@ -8,11 +8,7 @@ Installation
 Prerequisites
 -------------
 
-The only build dependency is the Nim compiler. However, depfile support is only
-available in the `patchset`_. To apply it in Gentoo, build ``dev-lang/nim`` with
-``experimental`` USE flag.
-
-.. _patchset: https://git.sysrq.in/nim-patches/
+The only build dependency is a working Nim compiler.
 
 Runtime dependencies are Nim (needed to run scripts) and either `ninja`_ or
 `samu`_.

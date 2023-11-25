@@ -1,4 +1,4 @@
-.. SPDX-FileCopyrightText: 2022 Anna <cyber@sysrq.in>
+.. SPDX-FileCopyrightText: 2022-2023 Anna <cyber@sysrq.in>
 ..
 .. SPDX-License-Identifier: BSD-3-Clause
 

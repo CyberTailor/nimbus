@@ -10,8 +10,8 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'nimbus'
-copyright = '2022-2023, Anna (cybertailor) Vyalkova & Nimble Authors'
 author = 'Anna (cybertailor) Vyalkova & Nimble Authors'
+copyright = f'2022-2023, {author}'
 release = '1.1.3'
 
 # -- General configuration ---------------------------------------------------
