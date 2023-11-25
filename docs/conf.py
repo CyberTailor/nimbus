@@ -18,14 +18,14 @@ release = '1.1.3'
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
-    'sphinx-prompt',
+    'sphinx_prompt',
 ]
 
 try:
     import notfound.extension
     extensions.append('notfound.extension')
 
-    notfound_no_urls_prefix = True
+    notfound_urls_prefix = None
 except ModuleNotFoundError:
     pass
 
@@ -47,7 +47,17 @@ manpages_url = 'https://docs.sysrq.in/{path}'
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = 'insipid'
+html_permalinks_icon = '#'
+html_theme_options = {
+    'globaltoc_maxdepth': 3,
+    'right_buttons': [],
+}
+html_sidebars = {
+    '**': [
+        'globaltoc.html',
+    ]
+}
+
 html_static_path = ['_static']
 html_title = f'{project} {release}'
-html_show_sourcelink = False
 html_baseurl = 'https://nimbus.sysrq.in/'
