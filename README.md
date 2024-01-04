@@ -5,6 +5,7 @@ nimbus
 ======
 
 [![Build Status](https://drone.tildegit.org/api/badges/CyberTaIlor/nimbus/status.svg)](https://drone.tildegit.org/CyberTaIlor/nimbus)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/8267/badge)](https://www.bestpractices.dev/projects/8267)
 
 **nimbus** is a **Nim** **bu**ild **s**ystem. You can also call in NimBS. Nimja
 would also be a clever name but it's already taken (turns out the name "nimbus"
