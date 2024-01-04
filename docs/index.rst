@@ -11,7 +11,7 @@ Directory`_ and other sources.
 
 .. _Nim: https://nim-lang.org/
 .. _Nimble: https://nimble.directory/
-.. _Nimble Directory: <https://nimble.directory/>
+.. _Nimble Directory: https://nimble.directory/
 
 If you want to learn about how to use nimbus, check out the following resources:
 
