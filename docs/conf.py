@@ -50,12 +50,15 @@ html_theme = 'insipid'
 html_permalinks_icon = '#'
 html_theme_options = {
     'globaltoc_maxdepth': 3,
-    'right_buttons': [],
+    'right_buttons': ['git-button.html'],
 }
 html_sidebars = {
     '**': [
         'globaltoc.html',
     ]
+}
+html_context = {
+    'git_repo_url': 'https://git.sysrq.in/nimbus/about/',
 }
 
 html_static_path = ['_static']
