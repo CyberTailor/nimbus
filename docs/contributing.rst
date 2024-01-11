@@ -44,3 +44,11 @@ Finally, send a patch to the developer using `git send-email`_:
    git send-email --to=cyber@sysrq.in origin/master
 
 .. _git send-email: https://git-send-email.io/
+
+Code style
+----------
+
+Should be `NEP-1`_ for all new contributions, however there are no linters in CI
+pipelines yet.
+
+.. _NEP-1: https://nim-lang.org/docs/nep1.html
