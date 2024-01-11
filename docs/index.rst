@@ -1,4 +1,4 @@
-.. SPDX-FileCopyrightText: 2022-2023 Anna <cyber@sysrq.in>
+.. SPDX-FileCopyrightText: 2022-2024 Anna <cyber@sysrq.in>
 ..
 .. SPDX-License-Identifier: BSD-3-Clause
 
@@ -37,3 +37,11 @@ nimble is a great tool for development but it does not get on well with system
 package managers. This project is intended to be used with traditional package
 managers (primarly with Gentoo's Portage). But maybe it'll be useful for other
 purposes too.
+
+Development status
+------------------
+
+This software is considered `completed`__ and stable. No new features are
+planned, however there will be releases for bug fixes and compatibility updates.
+
+__ https://drewdevault.com/2021/01/04/A-culture-of-stability-and-reliability.html

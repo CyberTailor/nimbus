@@ -55,7 +55,7 @@ Run tests
    ninja test
 
 This command will run "test" task (if defined). Otherwise, it will compile and
-run all Nim files in the file:`tests` directory beginning with "t" in their
+run all Nim files in the :file:`tests` directory beginning with "t" in their
 filename.
 
 This behavior is compatible with Nimble.

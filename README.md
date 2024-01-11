@@ -1,4 +1,4 @@
-<!-- SPDX-FileCopyrightText: 2022 Anna <cyber@sysrq.in> -->
+<!-- SPDX-FileCopyrightText: 2022-2024 Anna <cyber@sysrq.in> -->
 <!-- SPDX-License-Identifier: CC0-1.0 -->
 
 nimbus
@@ -31,8 +31,20 @@ This project is intended to be used with traditional package managers (primarly
 with Gentoo's Portage). But maybe it'll be useful for other purposes too.
 
 
+Development status
+------------------
+
+This software is considered [completed][ddv-post] and stable. No new features
+are planned, however there will be releases for bug fixes and compatibility
+updates.
+
+[ddv-post]: https://drewdevault.com/2021/01/04/A-culture-of-stability-and-reliability.html
+
+
 Dependencies
 ------------
+
+This software has no build dependencies other than the Nim standard library.
 
 **nimbus** only generates `build.ninja` files, so you'll need [ninja][ninja]
 or [samurai][samurai] to use it.
@@ -75,8 +87,9 @@ You can track new releases using an [atom feed][atom] provided by GitHub.
 Contributing
 ------------
 
-Patches and pull requests are welcome. Please use either [git-send-email(1)][1]
-or [git-request-pull(1)][2], addressed to <cyber@sysrq.in>.
+Patches and pull requests are welcome. Please use either
+[git-send-email(1)][git-send-email] or [git-request-pull(1)][git-request-pull],
+addressed to <cyber@sysrq.in>.
 
 Your commit message should conform to the following standard:
 
@@ -90,8 +103,8 @@ sure to reference any bug reports and other contributors.  Make
 sure the correct authorship appears.
 ```
 
-[1]: https://git-send-email.io/
-[2]: https://git-scm.com/docs/git-request-pull
+[git-send-email]: https://git-send-email.io/
+[git-request-pull]: https://git-scm.com/docs/git-request-pull
 
 
 IRC
