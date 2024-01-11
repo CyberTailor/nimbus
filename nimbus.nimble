@@ -5,7 +5,7 @@
 
 version       = "1.1.3"
 author        = "Anna"
-description   = "A Nim build system"
+description   = "A packaging-friendly Nim build system"
 license       = "BSD"
 
 bin = @["nimbus", "txt2deps"]
