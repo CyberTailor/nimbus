@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2022 Anna <cyber@sysrq.in>
+# SPDX-FileCopyrightText: 2022-2024 Anna <cyber@sysrq.in>
 # SPDX-License-Identifier: CC0-1.0
 #
 # Configuration file for the Sphinx documentation builder.
@@ -11,7 +11,7 @@
 
 project = 'nimbus'
 author = 'Anna (cybertailor) Vyalkova & Nimble Authors'
-copyright = f'2022-2023, {author}'
+copyright = f'2022-2024, {author}'
 release = '1.1.3'
 
 # -- General configuration ---------------------------------------------------
@@ -50,7 +50,7 @@ html_theme = 'insipid'
 html_permalinks_icon = '#'
 html_theme_options = {
     'globaltoc_maxdepth': 3,
-    'right_buttons': ['git-button.html'],
+    'right_buttons': ['git-button.html', 'bugtracker-button.html'],
 }
 html_sidebars = {
     '**': [
