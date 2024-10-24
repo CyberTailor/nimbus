@@ -35,6 +35,9 @@ try:
 
     sitemap_locales = [None]
     sitemap_url_scheme = '{link}'
+    sitemap_excludes = [
+        '404.html',
+    ]
 except ModuleNotFoundError:
     pass
 
