@@ -1,8 +1,0 @@
-Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: nimbus
-Upstream-Contact: Anna <cyber@sysrq.in>
-Source: https://nimbus.sysrq.in/
-
-Files: ChangeLog
-Copyright: Nimbus contributors
-License: CC0-1.0

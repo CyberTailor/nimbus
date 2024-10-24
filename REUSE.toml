@@ -1,0 +1,13 @@
+# SPDX-License-Identifier: CC0-1.0
+# SPDX-FileCopyrightText: 2024 Anna <cyber@sysrq.in>
+
+version = 1
+SPDX-PackageName = "nimbus"
+SPDX-PackageSupplier = "Anna <cyber@sysrq.in>"
+SPDX-PackageDownloadLocation = "https://nimbus.sysrq.in/"
+
+[[annotations]]
+path = "ChangeLog"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Nimbus contributors"
+SPDX-License-Identifier = "CC0-1.0"
