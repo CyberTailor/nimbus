@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: Copyright (C) Dominik Picheta. All rights reserved.
-# SPDX-FileCopyrightText: 2022 Anna <cyber@sysrq.in>
+# SPDX-FileCopyrightText: 2022-2024 Anna <cyber@sysrq.in>
 # SPDX-License-Identifier: BSD-3-Clause
 
 import std/[logging, os, osproc, parseutils, sequtils, strformat, strutils]
@@ -64,8 +64,8 @@ proc getPath*(depPkg: PkgTuple, options: Options): string =
   for pkg in pkgList:
     if not withinRange(pkg.version, depPkg.ver):
       continue
-    if depPkg.name != pkg.name:
-      if depPkg.name != getUrl(pkg.path):
+    if depPkg.name.normalize != pkg.name.normalize:
+      if depPkg.name.normalize != getUrl(pkg.path).normalize:
         continue
     matchingPkgs.add(pkg)
 

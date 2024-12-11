@@ -1,3 +1,9 @@
+2024-12-11  Anna  <cyber@sysrq.in>
+
+	* dependencyresolver.nim (getPath): "normalize" (i.e. convert to
+	lowercase and remove underscores) package names and URLs before
+	comparing them.
+
 2023-11-25  Anna  <cyber@sysrq.in>
 
 	* Documentation fixes

@@ -7,6 +7,8 @@ discard """
 --   Found packageA, version 0.5.0
 -- Checking for packageA
 --   Found packageA, version 0.5.0
+-- Checking for package_a
+--   Found packageA, version 0.5.0
 -- Checking for packageB
 '''
 """
@@ -20,6 +22,7 @@ const
 
 let
   pkgAHash: PkgTuple = ("packageA", parseVersionRange("#abc123"))
+  pkgAUnderscore: PkgTuple = ("package_a", parseVersionRange(">= 0.1"))
   pkgA: PkgTuple = ("packageA", parseVersionRange(">= 0.1"))
   pkgB: PkgTuple = ("packageB", parseVersionRange("< 1.0"))
 
@@ -28,5 +31,6 @@ opts.setLogger
 
 assert pkgA.getPath(opts) == pkgsDir / "packageA-0.5.0"
 assert pkgAHash.getPath(opts) == pkgsDir / "packageA-0.5.0"
+assert pkgAUnderscore.getPath(opts) == pkgsDir / "packageA-0.5.0"
 expect UnsatisfiedDependencyError:
   discard pkgB.getPath(opts)
