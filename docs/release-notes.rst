@@ -6,7 +6,7 @@ Release Notes
 =============
 
 1.1.4
-----------
+-----
 
 - Fix resolving dependencies with underscores or different letter case.
 

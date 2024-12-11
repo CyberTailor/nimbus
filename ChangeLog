@@ -4,6 +4,8 @@
 	lowercase and remove underscores) package names and URLs before
 	comparing them.
 
+	* 1.1.4 tagged
+
 2023-11-25  Anna  <cyber@sysrq.in>
 
 	* documentation fixes
