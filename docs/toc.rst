@@ -9,6 +9,7 @@ Table of Contents
    :caption: Home
 
    index
+   release-notes
 
 .. toctree::
    :caption: Documentation

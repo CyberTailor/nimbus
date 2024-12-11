@@ -45,3 +45,6 @@ This software is considered `completed`__ and stable. No new features are
 planned, however there will be releases for bug fixes and compatibility updates.
 
 __ https://drewdevault.com/2021/01/04/A-culture-of-stability-and-reliability.html
+
+nimbus follows the `SemVer 2.0.0 <https://semver.org/spec/v2.0.0.html>`_
+version policy, including its command-line interface.
