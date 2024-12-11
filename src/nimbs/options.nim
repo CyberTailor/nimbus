@@ -12,7 +12,7 @@ type
     debug*: bool
     nimbleDir*: string
     binDir*: string
-    nim*: string # Nim compiler location
+    nim*: string          # Nim compiler location
     url*: string
     sourceDir*: string
     buildDir*: string

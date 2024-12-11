@@ -10,15 +10,15 @@ type
     version: string
 
   VersionRangeEnum* = enum
-    verLater, # > V
-    verEarlier, # < V
-    verEqLater, # >= V -- Equal or later
+    verLater,     # > V
+    verEarlier,   # < V
+    verEqLater,   # >= V -- Equal or later
     verEqEarlier, # <= V -- Equal or earlier
     verIntersect, # > V & < V
-    verTilde, # ~= V
-    verCaret, # ^= V
-    verEq, # V
-    verAny # *
+    verTilde,     # ~= V
+    verCaret,     # ^= V
+    verEq,        # V
+    verAny        # *
 
   VersionRange* = ref VersionRangeObj
   VersionRangeObj = object
@@ -82,7 +82,7 @@ func `<=`*(ver: Version, ver2: Version): bool =
   return (ver == ver2) or (ver < ver2)
 
 func `==`*(range1: VersionRange, range2: VersionRange): bool =
-  if range1.kind != range2.kind : return false
+  if range1.kind != range2.kind: return false
   result = case range1.kind
   of verLater, verEarlier, verEqLater, verEqEarlier, verEq:
     range1.ver == range2.ver

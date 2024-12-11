@@ -38,21 +38,21 @@ proc rule*(
   f.line(fmt"rule {name}")
   f.variable("command", command, indent = 1)
   if description.len != 0:
-      f.variable("description", description, indent = 1)
+    f.variable("description", description, indent = 1)
   if depfile.len != 0:
-      f.variable("depfile", depfile, indent = 1)
+    f.variable("depfile", depfile, indent = 1)
   if deps.len != 0:
-      f.variable("deps", deps, indent = 1)
+    f.variable("deps", deps, indent = 1)
   if pool.len != 0:
-      f.variable("pool", pool, indent = 1)
+    f.variable("pool", pool, indent = 1)
   if rspfile.len != 0:
-      f.variable("rspfile", rspfile, indent = 1)
+    f.variable("rspfile", rspfile, indent = 1)
   if rspfile_content.len != 0:
-      f.variable("rspfile_content", rspfile_content, indent = 1)
+    f.variable("rspfile_content", rspfile_content, indent = 1)
   if generator:
-      f.variable("generator", "1", indent = 1)
+    f.variable("generator", "1", indent = 1)
   if restat:
-      f.variable("restat", "1", indent = 1)
+    f.variable("restat", "1", indent = 1)
 
 proc build*(
     f: File, outputs: openArray[string], rule: string;
@@ -70,26 +70,26 @@ proc build*(
   var implicitOutputs = implicitOutputs.filterIt(it.len != 0)
 
   if implicit.len != 0:
-      inputs.add("|")
-      inputs.add(implicit)
+    inputs.add("|")
+    inputs.add(implicit)
   if orderOnly.len != 0:
-      inputs.add("||")
-      inputs.add(orderOnly)
+    inputs.add("||")
+    inputs.add(orderOnly)
   if implicitOutputs.len != 0:
-      outputs.add("|")
-      outputs.add(implicitOutputs)
+    outputs.add("|")
+    outputs.add(implicitOutputs)
 
   let outputsStr = join(outputs, " ")
   let inputsStr = join(@[rule] & inputs, " ")
   f.line(fmt"build {outputsStr}: {inputsStr}")
   if pool.len != 0:
-      f.line(fmt"pool = {pool}", indent = 1)
+    f.line(fmt"pool = {pool}", indent = 1)
   if dyndep.len != 0:
-      f.line(fmt"dyndep = {dyndep}", indent = 1)
+    f.line(fmt"dyndep = {dyndep}", indent = 1)
 
   if variables != nil:
-      for key, val in variables.pairs:
-          f.variable(key, val, indent = 1)
+    for key, val in variables.pairs:
+      f.variable(key, val, indent = 1)
 
 proc `include`*(f: File, path: string) =
   if path.len != 0:
