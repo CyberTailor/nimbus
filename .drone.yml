@@ -7,9 +7,9 @@ name: default
 
 steps:
   - name: test
-    image: nimlang/nim:alpine
+    image: nimlang/nim:latest-alpine
     commands:
-      - testament --megatest:off all
+      - nimble test
 
 ---
 kind: pipeline

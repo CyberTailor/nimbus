@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2022-2023 Anna <cyber@sysrq.in>
+# SPDX-FileCopyrightText: 2022-2024 Anna <cyber@sysrq.in>
 # SPDX-License-Identifier: CC0-1.0
 
 # Package
@@ -19,7 +19,7 @@ requires "nim >= 0.13.0"
 # Tasks
 
 task test, "Test nimbus with Testament":
-  exec("testament all")
+  exec("testament pattern 'tests/**/**/test*.nim'")
 
 task clean, "Clean test files":
   rmFile("outputGotten.txt")

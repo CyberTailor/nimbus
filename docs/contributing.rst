@@ -1,4 +1,4 @@
-.. SPDX-FileCopyrightText: 2022 Anna <cyber@sysrq.in>
+.. SPDX-FileCopyrightText: 2022-2024 Anna <cyber@sysrq.in>
 ..
 .. SPDX-License-Identifier: BSD-3-Clause
 
@@ -20,7 +20,7 @@ Make some changes and run the tests:
 
 .. prompt:: bash
 
-   testament all
+   nimble test
 
 Commit the changes. Your commit message should conform to the following
 standard::
@@ -44,6 +44,19 @@ Finally, send a patch to the developer using `git send-email`_:
    git send-email --to=cyber@sysrq.in origin/master
 
 .. _git send-email: https://git-send-email.io/
+
+
+Writing new tests
+-----------------
+
+Tests are discovered by the following pattern:
+
+:file:`tests/<category>/<subcategory>/test_<name>.nim`
+
+This project uses the `Testament_` unit testing framework.
+
+.. _Testament: https://nim-lang.org/docs/testament.html#writing-unit-tests
+
 
 Code style
 ----------
