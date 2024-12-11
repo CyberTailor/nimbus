@@ -6,60 +6,61 @@
 
 2023-11-25  Anna  <cyber@sysrq.in>
 
-	* Documentation fixes
+	* documentation fixes
 
 2023-06-17  Anna  <cyber@sysrq.in>
 
-	* man/txt2deps.1: fix filename
+	* man/txt2deps.1: fix filename.
 
 	* 1.1.3 tagged
 
 2023-05-28  Anna  <cyber@sysrq.in>
 
-	* Add $sourcedir ninja variable (deleted by mistake)
+	* nimbus.nim (setup): add $sourcedir ninja variable (deleted by
+	mistake).
 
 	* 1.1.2 tagged
 
 2023-05-02  Anna  <cyber@sysrq.in>
 
-	* testerscript.nim: change nim cache directory for tests
+	* testerscript.nim: change nim cache directory for tests.
 
-	* testerscript.nim: disable warnings
+	* testerscript.nim: disable warnings.
 
-	* Add Drone CI
+	* add Drone CI
 
 2023-04-27  Anna  <cyber@sysrq.in>
 
 	* 1.1.0, 1.1.1 tagged
 
-	* ninjasyntax.nim (build): don't escape args automatically
+	* ninjasyntax.nim (build): don't escape args automatically.
 
-	* nimbus.nim: use a custom build script
+	* nimbus.nim: use a custom build script.
 
-	* tests: refine directory structure
+	* tests: refine directory structure.
 
-	* nimbus.nimble: add clean task
+	* nimbus.nimble: add clean task.
 
-	* Use separate cache directories for each target
+	* use separate cache directories for each target
 
 2023-04-25  Anna  <cyber@sysrq.in>
 
-	* nimbus.nim: drop support for patched Nim compilers
+	* nimbus.nim: drop support for patched Nim compilers.
 
-	* txt2deps: new utility
+	* txt2deps: new utility.
 
 2022-07-13  Anna  <cyber@sysrq.in>
 
 	* 0.3.0, 0.3.1 tagged
 
-	* nim.cfg: switch to --gc:orc, disable threads
+	* nim.cfg: switch to --gc:orc, disable threads.
 
-	* nimbleexecutor.nim (toJsonString): query variables in bulk
+	* nimbleexecutor.nim (toJsonString): query variables in bulk.
 
 	* nimbus.nim: support patched Nim compilers with --depfile option; add
-	debug output
+	debug output.
 
-	* options.nim (initLogger): set default log level to NOTICE
+	* options.nim (initLogger): set default log level to NOTICE.
 
 2022-07-04  Anna  <cyber@sysrq.in>
 
@@ -67,23 +68,23 @@
 
 	* Implemented better quoting for generated NimScript and ninja.build.
 
-	* nimbleexecutor.nim (query): add debug output
+	* nimbleexecutor.nim (query): add debug output.
 
 	* packageinfo.nim (initPackageInfo): use custom spawnX-like wrappers
-	to avoid spawning too much threads, add debug info
+	to avoid spawning too much threads, add debug info.
 
 2022-07-02  Anna  <cyber@sysrq.in>
 
 	* 0.2.0, 0.2.1, 0.2.2, 0.2.3 tagged
 
-	* Fixed build for binaries inside subdirectories.
+	* fix build for binaries inside subdirectories
 
-	* Added support for nimblecache in the build dir.
+	* add support for nimblecache in the build dir
 
-	* packageinfo.nim (initPackageInfo): execute NimScript in parallel
+	* packageinfo.nim (initPackageInfo): execute NimScript in parallel.
 
 	* testerscript.nim (writeTesterScript): fix for tests that expect to
-	be run from the source root
+	be run from the source root.
 
 2022-06-29  Anna  <cyber@sysrq.in>
 
