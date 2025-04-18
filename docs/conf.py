@@ -12,7 +12,7 @@
 project = 'nimbus'
 author = 'Anna (cybertailor) Vyalkova & Nimble Authors'
 copyright = f'2022-2024, {author}'
-release = '1.1.4'
+release = '1.1.5'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

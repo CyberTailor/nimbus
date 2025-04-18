@@ -5,7 +5,7 @@
 Release Notes
 =============
 
-1.1.4-next
+1.1.5
 -----
 
 - Implement support for `"softened" package structure`__ for better
