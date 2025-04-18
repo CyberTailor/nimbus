@@ -3,5 +3,6 @@
 
 version = "1.0"
 
-srcDir = "src"
-skipExt = @["test"]
+# This is inferred implicitly by Nimble:
+# installDirs = @["softened"]
+# installFiles = @["softened.nim"]

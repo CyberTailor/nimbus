@@ -1,3 +1,11 @@
+2025-04-18  Anna  <cyber@sysrq.in>
+
+	* packageinfo.nim (getFiles): pass sourceDir in each call to make sure
+	skipFiles and skipDirs are processed correctly.
+
+	* packageinfo.nim (inferInstallRules): apply rules to infer which files
+	should/shouldn't be installed.
+
 2024-12-11  Anna  <cyber@sysrq.in>
 
 	* dependencyresolver.nim (getPath): "normalize" (i.e. convert to

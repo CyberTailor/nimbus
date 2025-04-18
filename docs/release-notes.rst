@@ -1,9 +1,22 @@
-.. SPDX-FileCopyrightText: 2024 Anna <cyber@sysrq.in>
+.. SPDX-FileCopyrightText: 2024-2025 Anna <cyber@sysrq.in>
 ..
 .. SPDX-License-Identifier: BSD-3-Clause
 
 Release Notes
 =============
+
+1.1.4-next
+-----
+
+- Implement support for `"softened" package structure`__ for better
+  compatibility with Nimble.
+
+- Make sure binaries are not accidentally installed where sources are installed.
+
+- Fix ``skipFiles`` and ``skipDirs`` being relative to the directory currently
+  processed instead of the source directory.
+
+__ https://github.com/nim-lang/nimble/issues/469
 
 1.1.4
 -----

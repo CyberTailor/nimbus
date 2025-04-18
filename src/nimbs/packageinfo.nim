@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: Copyright (C) Dominik Picheta. All rights reserved.
-# SPDX-FileCopyrightText: 2022 Anna <cyber@sysrq.in>
+# SPDX-FileCopyrightText: 2022-2025 Anna <cyber@sysrq.in>
 # SPDX-License-Identifier: BSD-3-Clause
 
 import std/[json, logging, os, sequtils]
@@ -39,6 +39,28 @@ proc findNimbleFile*(dir: string): string =
     quit("Could not find a file with a .nimble extension inside the " &
          "specified directory: " & dir)
 
+proc inferInstallRules*(pkgInfo: var PackageInfo, options: Options) =
+  # Binary packages shouldn't install .nim files by default.
+  # (As long as the package info doesn't explicitly specify what should be
+  # installed.)
+  let installInstructions =
+    pkgInfo.installDirs.len + pkgInfo.installExt.len + pkgInfo.installFiles.len
+  if installInstructions == 0 and pkgInfo.bin.len > 0 and pkgInfo.name != "nim":
+    pkgInfo.skipExt.add("nim")
+
+  # When a package doesn't specify a `srcDir` it's fair to assume that
+  # the .nim files are in the root of the package. So we can explicitly select
+  # them and prevent the installation of anything else. The user can always
+  # override this with `installFiles`.
+  if pkgInfo.srcDir == "":
+    if dirExists(options.getSourceDir() / pkgInfo.name):
+      pkgInfo.installDirs.add(pkgInfo.name)
+    if fileExists(options.getSourceDir() / pkgInfo.name.addFileExt("nim")):
+      pkgInfo.installFiles.add(pkgInfo.name.addFileExt("nim"))
+
+  # Always skip binaries.
+  pkgInfo.skipFiles &= pkgInfo.bin
+
 proc initPackageInfo*(options: Options): PackageInfo =
   ## Fill a new PackageInfo object using values from the Nimble file.
 
@@ -60,6 +82,10 @@ proc initPackageInfo*(options: Options): PackageInfo =
   
   if result.name.len == 0:
     result.name = splitFile(nimbleFile).name
+
+  # Apply rules to infer which files should/shouldn't be installed.
+  # https://github.com/nim-lang/nimble/issues/469
+  inferInstallRules(result, options)
 
 func getSourceDir*(pkgInfo: PackageInfo, options: Options): string =
   ## Returns the directory containing the package source files.
@@ -118,29 +144,32 @@ proc getFilesInDir(dir: string): seq[InstallEntry] =
     else:
       result.add (pcFile, path)
 
-proc getFiles(pkgInfo: PackageInfo, dir: string): seq[InstallEntry] =
-    for kind, path in walkDir(dir):
-      case kind
-      of pcDir:
-        let skip = pkgInfo.checkInstallDir(dir, path)
-        if skip:
-          continue
-        result.add (kind, path)
-        result &= pkgInfo.getFiles(path)
-      of pcFile:
-        let skip = pkgInfo.checkInstallFile(dir, path)
-        if skip:
-          continue
-        result.add (kind, path)
-      else:
+proc getFiles(pkgInfo: PackageInfo, sourceDir, dir: string): seq[InstallEntry] =
+  for kind, path in walkDir(dir):
+    case kind
+    of pcDir:
+      let skip = pkgInfo.checkInstallDir(sourceDir, path)
+      if skip:
         continue
+      result.add (kind, path)
+      result &= pkgInfo.getFiles(sourceDir, path)
+    of pcFile:
+      let skip = pkgInfo.checkInstallFile(sourceDir, path)
+      if skip:
+        continue
+      result.add (kind, path)
+    else:
+      continue
+
+proc getFiles(pkgInfo: PackageInfo, sourceDir: string): seq[InstallEntry] =
+  pkgInfo.getFiles(sourceDir, sourceDir)
 
 proc getInstallFiles*(pkgInfo: PackageInfo, options: Options): seq[InstallEntry] =
   let sourceDir = pkgInfo.getSourceDir(options)
   let whitelistMode =
-          pkgInfo.installDirs.len != 0 or
-          pkgInfo.installFiles.len != 0 or
-          pkgInfo.installExt.len != 0
+    pkgInfo.installDirs.len != 0 or
+    pkgInfo.installFiles.len != 0 or
+    pkgInfo.installExt.len != 0
   if whitelistMode:
     for file in pkgInfo.installFiles:
       let src = sourceDir / file

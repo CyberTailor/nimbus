@@ -3,5 +3,6 @@
 
 version = "1.0"
 
-srcDir = "src"
-skipExt = @["test"]
+bin = @["tools/main"]
+installExt = @["nim"]
+skipFiles = @["README.md"]

@@ -41,7 +41,7 @@ purposes too.
 Development status
 ------------------
 
-This software is considered `completed`__ and stable. No new features are
+This software is `considered completed and stable`__. No new features are
 planned, however there will be releases for bug fixes and compatibility updates.
 
 __ https://drewdevault.com/2021/01/04/A-culture-of-stability-and-reliability.html

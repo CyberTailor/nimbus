@@ -4,20 +4,22 @@
 import std/[algorithm, os]
 import nimbs/[options, packageinfo]
 
-const sourceDir = "tests" / "nimble" / "packageinfo" / "source-whitelist"
+const sourceDir = "tests" / "nimble" / "packageinfo" / "binary-mixed"
 
 let opts = Options(sourceDir: sourceDir)
 var pkgInfo = PackageInfo(
-  nimbleFile: sourceDir / "source-whitelist.nimble",
-  name: "source-whitelist",
+  nimbleFile: sourceDir / "binary-mixed.nimble",
+  name: "binary-mixed",
   version: "1.0",
-  installExt: @["nim"]
+  installExt: @["nim"],
+  bin: @["tools/main"],
+  skipFiles: @["README.md"]
 )
 
 inferInstallRules(pkgInfo, opts)
 
 let files = pkgInfo.getInstallFiles(opts).sorted
 assert files == @[
-  (pcFile, sourceDir / "file1.nim"),
-  (pcFile, sourceDir / "file2.nim")
+  (pcFile, sourceDir / "tools" / "main.nim"),
+  (pcDir, sourceDir / "tools")
 ]
