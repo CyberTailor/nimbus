@@ -23,7 +23,7 @@ If you need help, or want to talk to the developers, use our chat rooms:
 * IRC: `#nimbus`_ at ``irc.oftc.net``
 * Matrix: `#nimbus:sysrq.in`_
 
-.. _#nimbus: https://kiwiirc.com/nextclient/#ircs://irc.oftc.net:+6697/nimbus
+.. _#nimbus: https://webchat.oftc.net/?randomnick=1&channels=nimbus&prompt=1
 .. _#nimbus\:sysrq.in: https://matrix.to/#/#nimbus:sysrq.in
 
 If you find any bugs, please report them on `Bugzilla`_.
